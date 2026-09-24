@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tebak Emosi - TK Al Azhar 21</title>
+<style>
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+  }
+
+  .screen {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100vh;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .screen.active { display: flex; }
+
+  /* ================= DASHBOARD - TAMAN BERMAIN ================= */
+  #dashboard-screen {
+    background: linear-gradient(180deg, #6EC6FF 0%, #A8E6FF 40%, #C8F0B8 40%, #8FDB6F 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sun {
+    position: absolute;
+    top: 6%;
+    right: 10%;
+    font-size: 90px;
+    animation: spin-sun 8s linear infinite;
+    z-index: 1;
+  }
+  @keyframes spin-sun {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .cloud-emoji {
+    position: absolute;
+    font-size: 60px;
+    opacity: 0.95;
+    z-index: 1;
+  }
+  .cloud-a { top: 8%; left: 6%; animation: drift 22s linear infinite; }
+  .cloud-b { top: 14%; left: 55%; animation: drift 28s linear infinite reverse; font-size: 48px; }
+  .cloud-c { top: 5%; left: 32%; animation: drift 18s linear infinite; font-size: 40px; }
+
+  @keyframes drift {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(50px); }
+    100% { transform: translateX(0); }
+  }
+
+  .flower {
+    position: absolute;
+    bottom: 4%;
+    font-size: 50px;
+    z-index: 1;
+    animation: sway 2.6s ease-in-out infinite;
+  }
+  .flower1 { left: 6%; animation-delay: 0s; }
+  .flower2 { left: 18%; font-size: 40px; animation-delay: 0.4s; }
+  .flower3 { right: 8%; animation-delay: 0.8s; }
+  .flower4 { right: 20%; font-size: 42px; animation-delay: 1.2s; }
+
+  @keyframes sway {
+    0%, 100% { transform: rotate(-6deg); }
+    50% { transform: rotate(6deg); }
+  }
+
+  .butterfly {
+    position: absolute;
+    font-size: 40px;
+    z-index: 2;
+    animation: fly-around 7s ease-in-out infinite;
+  }
+  .butterfly1 { top: 30%; left: 15%; animation-delay: 0s; }
+  .butterfly2 { top: 45%; right: 18%; animation-delay: 1.5s; animation-duration: 9s; }
+
+  @keyframes fly-around {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    25%  { transform: translate(30px, -25px) rotate(10deg); }
+    50%  { transform: translate(60px, 0) rotate(-6deg); }
+    75%  { transform: translate(30px, 20px) rotate(8deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+  }
+
+  #main-title {
+    font-size: 54px;
+    font-weight: bold;
+    color: #E65100;
+    text-shadow: 3px 3px 0 #fff, -1px -1px 0 #fff;
+    margin-bottom: 4px;
+    z-index: 3;
+  }
+
+  #sub-title {
+    font-size: 30px;
+    font-weight: bold;
+    color: #5D4037;
+    background: rgba(255,255,255,0.75);
+    padding: 8px 26px;
+    border-radius: 30px;
+    margin-bottom: 14px;
+    z-index: 3;
+  }
+
+  #mascot {
+    font-size: 150px;
+    z-index: 3;
+    animation: bounce-mascot 1.4s ease-in-out infinite;
+    filter: drop-shadow(0 10px 8px rgba(0,0,0,0.18));
+  }
+
+  @keyframes bounce-mascot {
+    0%, 100% { transform: translateY(0) rotate(-4deg); }
+    50% { transform: translateY(-22px) rotate(4deg); }
+  }
+
+  #start-btn {
+    margin-top: 16px;
+    font-size: 40px;
+    font-weight: bold;
+    padding: 22px 56px;
+    background: #FFE066;
+    color: #6b4b00;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    box-shadow: 0 10px 0 #E0A800;
+    z-index: 3;
+    animation: pulse-btn 1.2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-btn {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+  }
+
+  #start-btn:active {
+    transform: translateY(8px) scale(1);
+    box-shadow: 0 2px 0 #E0A800;
+  }
+
+  /* ================= GAME SCREEN ================= */
+  #game-screen {
+    background: #FFF8E7;
+    position: relative;
+  }
+
+  #score-box {
+    position: absolute;
+    top: 24px;
+    right: 32px;
+    background: #ffffff;
+    border: 4px solid #FFD166;
+    border-radius: 20px;
+    padding: 14px 28px;
+    font-size: 32px;
+    font-weight: bold;
+    color: #444;
+    box-shadow: 0 6px 0 rgba(0,0,0,0.08);
+  }
+
+  #question-counter {
+    position: absolute;
+    top: 24px;
+    left: 32px;
+    background: #ffffff;
+    border: 4px solid #A8D8EA;
+    border-radius: 20px;
+    padding: 14px 28px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #444;
+    box-shadow: 0 6px 0 rgba(0,0,0,0.08);
+  }
+
+  #title {
+    font-size: 44px;
+    font-weight: bold;
+    color: #6b4b3e;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  #emoji-display {
+    font-size: 150px;
+    line-height: 1;
+    margin: 10px 0 30px 0;
+    text-align: center;
+    filter: drop-shadow(0 8px 6px rgba(0,0,0,0.1));
+    animation: pop-in 0.4s ease;
+  }
+
+  @keyframes pop-in {
+    0% { transform: scale(0.3); opacity: 0; }
+    70% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); }
+  }
+
+  #buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(200px, 260px));
+    gap: 24px;
+    justify-content: center;
+  }
+
+  .emo-btn {
+    min-width: 200px;
+    min-height: 100px;
+    font-size: 40px;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    border: none;
+    border-radius: 24px;
+    cursor: pointer;
+    color: #3a3a3a;
+    box-shadow: 0 8px 0 rgba(0,0,0,0.15);
+    transition: transform 0.08s ease, box-shadow 0.08s ease;
+  }
+
+  .emo-btn:active {
+    transform: translateY(6px);
+    box-shadow: 0 2px 0 rgba(0,0,0,0.15);
+  }
+
+  .emo-btn:disabled {
+    opacity: 0.55;
+    cursor: default;
+  }
+
+  .btn-senang { background: #FFE66D; }
+  .btn-sedih  { background: #A8D8EA; }
+  .btn-marah  { background: #FF6B6B; color: #fff; }
+  .btn-netral { background: #B5EAD7; }
+
+  #feedback {
+    margin-top: 22px;
+    font-size: 42px;
+    font-weight: bold;
+    min-height: 60px;
+    text-align: center;
+  }
+
+  .feedback-correct { color: #2e7d32; }
+  .feedback-wrong { color: #6d5b3e; }
+
+  /* ================= LAYAR AKHIR ================= */
+  #end-screen {
+    background: #FFF8E7;
+  }
+
+  #end-screen h1 {
+    font-size: 46px;
+    color: #6b4b3e;
+    margin-bottom: 6px;
+  }
+
+  #final-score {
+    font-size: 58px;
+    font-weight: bold;
+    color: #FF6B6B;
+    margin: 12px 0 8px 0;
+  }
+
+  #final-message {
+    font-size: 38px;
+    font-weight: bold;
+    margin-bottom: 26px;
+  }
+
+  #final-emoji {
+    font-size: 120px;
+    margin-bottom: 4px;
+    animation: bounce-mascot 1.4s ease-in-out infinite;
+  }
+
+  #end-buttons {
+    display: flex;
+    gap: 24px;
+  }
+
+  #restart-btn, #home-btn {
+    font-size: 34px;
+    font-weight: bold;
+    padding: 20px 40px;
+    border: none;
+    border-radius: 24px;
+    cursor: pointer;
+    box-shadow: 0 8px 0 rgba(0,0,0,0.15);
+  }
+
+  #restart-btn { background: #FFE66D; color: #3a3a3a; }
+  #home-btn { background: #A8D8EA; color: #2a2a2a; }
+
+  #restart-btn:active, #home-btn:active {
+    transform: translateY(6px);
+    box-shadow: 0 2px 0 rgba(0,0,0,0.15);
+  }
+
+  /* ================= CONFETTI ================= */
+  .confetti {
+    position: fixed;
+    top: -20px;
+    width: 14px;
+    height: 14px;
+    opacity: 0.9;
+    pointer-events: none;
+    z-index: 50;
+    animation-name: fall;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0.9; }
+  }
+
+  @media (max-width: 700px) {
+    #emoji-display { font-size: 100px; }
+    .emo-btn { min-width: 140px; min-height: 80px; font-size: 28px; }
+    #title { font-size: 30px; }
+    #feedback { font-size: 30px; }
+    #main-title { font-size: 34px; }
+    #mascot { font-size: 100px; }
+    #start-btn { font-size: 28px; padding: 16px 36px; }
+    #restart-btn, #home-btn { font-size: 24px; padding: 14px 26px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== DASHBOARD ===================== -->
+<div id="dashboard-screen" class="screen active">
+  <div class="sun">☀️</div>
+  <div class="cloud-emoji cloud-a">☁️</div>
+  <div class="cloud-emoji cloud-b">☁️</div>
+  <div class="cloud-emoji cloud-c">☁️</div>
+
+  <div class="butterfly butterfly1">🦋</div>
+  <div class="butterfly butterfly2">🦋</div>
+
+  <div class="flower flower1">🌻</div>
+  <div class="flower flower2">🌷</div>
+  <div class="flower flower3">🌼</div>
+  <div class="flower flower4">🌻</div>
+
+  <div id="main-title">🎮 TEBAK EMOSI 🎮</div>
+  <div id="sub-title">Game TK Al Azhar 21</div>
+  <div id="mascot">🐰</div>
+  <button id="start-btn">▶️ MULAI BERMAIN</button>
+</div>
+
+<!-- ===================== GAME ===================== -->
+<div id="game-screen" class="screen">
+  <div id="question-counter">Soal: 1/10</div>
+  <div id="score-box">Skor: 0</div>
+
+  <div id="title">Tebak Emosinya! 🧐</div>
+  <div id="emoji-display">😊</div>
+
+  <div id="buttons-grid">
+    <button class="emo-btn btn-senang" data-jawaban="senang">😀 SENANG</button>
+    <button class="emo-btn btn-sedih" data-jawaban="sedih">😢 SEDIH</button>
+    <button class="emo-btn btn-marah" data-jawaban="marah">😠 MARAH</button>
+    <button class="emo-btn btn-netral" data-jawaban="netral">😐 NETRAL</button>
+  </div>
+
+  <div id="feedback"></div>
+</div>
+
+<!-- ===================== LAYAR AKHIR ===================== -->
+<div id="end-screen" class="screen">
+  <div id="final-emoji">🏆</div>
+  <h1>Permainan Selesai!</h1>
+  <div id="final-score">Skor Akhir: 0/10</div>
+  <div id="final-message">Hebat!</div>
+  <div id="end-buttons">
+    <button id="restart-btn">🔄 MAIN LAGI</button>
+    <button id="home-btn">🏠 KEMBALI KE DASHBOARD</button>
+  </div>
+</div>
+
+<script>
+  // ================= ELEMEN =================
+  const dashboardScreen = document.getElementById('dashboard-screen');
+  const gameScreen = document.getElementById('game-screen');
+  const endScreen = document.getElementById('end-screen');
+
+  const startBtn = document.getElementById('start-btn');
+  const restartBtn = document.getElementById('restart-btn');
+  const homeBtn = document.getElementById('home-btn');
+
+  const emojiDisplay = document.getElementById('emoji-display');
+  const feedbackEl = document.getElementById('feedback');
+  const scoreBox = document.getElementById('score-box');
+  const questionCounter = document.getElementById('question-counter');
+  const buttons = document.querySelectorAll('.emo-btn');
+
+  const finalScoreEl = document.getElementById('final-score');
+  const finalMessageEl = document.getElementById('final-message');
+  const finalEmojiEl = document.getElementById('final-emoji');
+
+  // ================= DATA SOAL =================
+  const soalMentah = [
+    { emoji: '😊', jawaban: 'senang' },
+    { emoji: '😄', jawaban: 'senang' },
+    { emoji: '😁', jawaban: 'senang' },
+    { emoji: '😢', jawaban: 'sedih' },
+    { emoji: '😞', jawaban: 'sedih' },
+    { emoji: '😔', jawaban: 'sedih' },
+    { emoji: '😠', jawaban: 'marah' },
+    { emoji: '😡', jawaban: 'marah' },
+    { emoji: '😐', jawaban: 'netral' },
+    { emoji: '😶', jawaban: 'netral' }
+  ];
+
+  let soalList = [];
+  let indexSoal = 0;
+  let skor = 0;
+  const totalSoal = 10;
+
+  // ================= AUDIO (Web Audio API) =================
+  let audioCtx = null;
+  function getAudioCtx() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    return audioCtx;
+  }
+
+  function playTone(freq, duration, type, startTime, gainPeak) {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    osc.type = type || 'sine';
+    osc.frequency.value = freq;
+    osc.connect(gainNode);
+    gainNode.connect(ctx.destination);
+
+    const t0 = ctx.currentTime + (startTime || 0);
+    gainNode.gain.setValueAtTime(0, t0);
+    gainNode.gain.linearRampToValueAtTime(gainPeak, t0 + 0.02);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, t0 + duration);
+
+    osc.start(t0);
+    osc.stop(t0 + duration + 0.05);
+  }
+
+  function soundClick() {
+    playTone(700, 0.05, 'square', 0, 0.3);
+  }
+
+  function soundCorrect() {
+    // C-E-G-C naik, volume 0.7, durasi total ~0.5s
+    playTone(523.25, 0.15, 'triangle', 0, 0.7);
+    playTone(659.25, 0.15, 'triangle', 0.12, 0.7);
+    playTone(783.99, 0.15, 'triangle', 0.24, 0.7);
+    playTone(1046.50, 0.2, 'triangle', 0.36, 0.7);
+  }
+
+  function soundWrong() {
+    // E-C turun, volume 0.5, durasi ~0.3s
+    playTone(329.63, 0.15, 'sine', 0, 0.5);
+    playTone(261.63, 0.18, 'sine', 0.12, 0.5);
+  }
+
+  function ucapkan(teks, rate, pitch) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(teks);
+    utter.lang = 'id-ID';
+    utter.rate = rate || 0.9;
+    utter.pitch = pitch || 1.0;
+    utter.volume = 1.0;
+    window.speechSynthesis.speak(utter);
+  }
+
+  // ---------- Backsound (HANYA di dashboard) ----------
+  let backsoundInterval = null;
+  let backsoundOn = false;
+
+  function mainkanNadaBacksound(freq, waktuMulai, durasi, gain) {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    osc.connect(gainNode);
+    gainNode.connect(ctx.destination);
+
+    const t0 = ctx.currentTime + waktuMulai;
+    gainNode.gain.setValueAtTime(0, t0);
+    gainNode.gain.linearRampToValueAtTime(gain, t0 + 0.05);
+    gainNode.gain.linearRampToValueAtTime(0, t0 + durasi);
+
+    osc.start(t0);
+    osc.stop(t0 + durasi + 0.05);
+  }
+
+  function putarSatuLoopBacksound() {
+    // melodi C-E-G-E-C-E-G-E, tiap nada 0.35 detik, volume 0.15 (lembut)
+    const nada = [523.25, 659.25, 783.99, 659.25, 523.25, 659.25, 783.99, 659.25];
+    const durasiNada = 0.35;
+    nada.forEach((freq, i) => {
+      mainkanNadaBacksound(freq, i * durasiNada, durasiNada * 0.9, 0.15);
+    });
+    return nada.length * durasiNada * 1000;
+  }
+
+  function mulaiBacksoundDashboard() {
+    if (backsoundOn) return;
+    backsoundOn = true;
+    const jadwalkanLoop = () => {
+      if (!backsoundOn) return;
+      const durasiMs = putarSatuLoopBacksound();
+      backsoundInterval = setTimeout(jadwalkanLoop, durasiMs);
+    };
+    jadwalkanLoop();
+  }
+
+  function hentikanBacksoundDashboard() {
+    backsoundOn = false;
+    if (backsoundInterval) {
+      clearTimeout(backsoundInterval);
+      backsoundInterval = null;
+    }
+  }
+
+  // Aktifkan audio & mulai backsound pada sentuhan pertama di layar dashboard
+  document.addEventListener('pointerdown', function aktifkanAudioPertamaKali() {
+    getAudioCtx();
+    if (dashboardScreen.classList.contains('active')) {
+      mulaiBacksoundDashboard();
+    }
+    document.removeEventListener('pointerdown', aktifkanAudioPertamaKali);
+  }, { once: true });
+
+  function putarFanfareKemenangan() {
+    const nada = [523.25, 659.25, 783.99, 1046.50, 659.25, 783.99, 1318.51];
+    nada.forEach((freq, i) => {
+      playTone(freq, 0.22, 'triangle', i * 0.18, 0.7);
+    });
+  }
+
+  function putarMelodiSkorAkhir(skorAkhir) {
+    if (skorAkhir >= 9) {
+      putarFanfareKemenangan();
+    } else if (skorAkhir >= 7) {
+      playTone(523.25, 0.2, 'triangle', 0, 0.6);
+      playTone(659.25, 0.2, 'triangle', 0.18, 0.6);
+      playTone(783.99, 0.25, 'triangle', 0.36, 0.6);
+      playTone(1046.50, 0.3, 'triangle', 0.54, 0.6);
+    } else if (skorAkhir >= 5) {
+      playTone(523.25, 0.25, 'sine', 0, 0.5);
+      playTone(659.25, 0.25, 'sine', 0.2, 0.5);
+      playTone(783.99, 0.3, 'sine', 0.4, 0.5);
+    } else {
+      playTone(523.25, 0.2, 'square', 0, 0.5);
+      playTone(523.25, 0.2, 'square', 0.22, 0.5);
+      playTone(783.99, 0.2, 'square', 0.44, 0.5);
+      playTone(783.99, 0.25, 'square', 0.66, 0.5);
+    }
+  }
+
+  // ================= NAVIGASI LAYAR =================
+  function tampilkanLayar(layar) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    layar.classList.add('active');
+  }
+
+  // ================= FUNGSI GAME =================
+  function acakSoal(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function mulaiGame() {
+    soalList = acakSoal(soalMentah);
+    indexSoal = 0;
+    skor = 0;
+    updateSkorTampilan();
+    tampilkanLayar(gameScreen);
+    tampilkanSoal();
+  }
+
+  function kembaliKeDashboard() {
+    tampilkanLayar(dashboardScreen);
+    mulaiBacksoundDashboard();
+  }
+
+  function updateSkorTampilan() {
+    scoreBox.textContent = 'Skor: ' + skor;
+  }
+
+  function tampilkanSoal() {
+    feedbackEl.textContent = '';
+    feedbackEl.className = '';
+    questionCounter.textContent = 'Soal: ' + (indexSoal + 1) + '/' + totalSoal;
+
+    const soal = soalList[indexSoal];
+    emojiDisplay.textContent = soal.emoji;
+
+    emojiDisplay.style.animation = 'none';
+    void emojiDisplay.offsetWidth;
+    emojiDisplay.style.animation = 'pop-in 0.4s ease';
+
+    buttons.forEach(btn => btn.disabled = false);
+  }
+
+  function cekJawaban(jawabanDipilih) {
+    const soal = soalList[indexSoal];
+
+    if (jawabanDipilih === soal.jawaban) {
+      // BENAR
+      soundCorrect();
+      setTimeout(() => ucapkan('Hebat!', 0.9, 1.2), 500);
+
+      skor++;
+      updateSkorTampilan();
+      feedbackEl.textContent = '🎉 SELAMAT! BENAR! 🎉';
+      feedbackEl.className = 'feedback-correct';
+      buatConfetti();
+      buttons.forEach(btn => btn.disabled = true);
+
+      setTimeout(() => {
+        indexSoal++;
+        if (indexSoal >= totalSoal) {
+          tampilkanLayarAkhir();
+        } else {
+          tampilkanSoal();
+        }
+      }, 1800);
+
+    } else {
+      // SALAH — tombol tetap aktif, anak boleh coba lagi
+      soundWrong();
+      setTimeout(() => ucapkan('Coba lagi ya!', 0.9, 1.0), 350);
+      feedbackEl.textContent = '🤔 Coba lagi ya!';
+      feedbackEl.className = 'feedback-wrong';
+    }
+  }
+
+  function tampilkanLayarAkhir() {
+    tampilkanLayar(endScreen);
+    finalScoreEl.textContent = 'Skor Akhir: ' + skor + '/' + totalSoal;
+
+    let pesan = '';
+    let emoji = '';
+    let ucapan = '';
+
+    if (skor >= 9) {
+      pesan = '🏆 LUAR BIASA! Kamu Juara! 🏆';
+      emoji = '🏆';
+      ucapan = 'Luar biasa! Kamu juara!';
+    } else if (skor >= 7) {
+      pesan = '⭐ HEBAT! Kamu Pintar! ⭐';
+      emoji = '⭐';
+      ucapan = 'Hebat! Kamu pintar!';
+    } else if (skor >= 5) {
+      pesan = '👍 BAGUS! Ayo Coba Lagi! 👍';
+      emoji = '👍';
+      ucapan = 'Bagus! Ayo coba lagi!';
+    } else {
+      pesan = '💪 SEMANGAT! Kamu Bisa! 💪';
+      emoji = '💪';
+      ucapan = 'Semangat! Kamu bisa!';
+    }
+
+    finalMessageEl.textContent = pesan;
+    finalEmojiEl.textContent = emoji;
+
+    putarMelodiSkorAkhir(skor);
+    setTimeout(() => ucapkan(ucapan, 0.9, 1.1), 1300);
+  }
+
+  // ================= CONFETTI =================
+  function buatConfetti() {
+    const warnaConfetti = ['#FFE66D', '#A8D8EA', '#FF6B6B', '#B5EAD7', '#FFD166', '#c8a2ff'];
+    const jumlah = 45;
+
+    for (let i = 0; i < jumlah; i++) {
+      const conf = document.createElement('div');
+      conf.className = 'confetti';
+      conf.style.left = Math.random() * 100 + 'vw';
+      conf.style.background = warnaConfetti[Math.floor(Math.random() * warnaConfetti.length)];
+      conf.style.width = (8 + Math.random() * 10) + 'px';
+      conf.style.height = conf.style.width;
+      conf.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+
+      const durasi = 1.8 + Math.random() * 1.4;
+      conf.style.animationDuration = durasi + 's';
+      conf.style.animationDelay = (Math.random() * 0.3) + 's';
+
+      document.body.appendChild(conf);
+
+      setTimeout(() => conf.remove(), (durasi + 0.5) * 1000);
+    }
+  }
+
+  // ================= EVENT LISTENERS =================
+  startBtn.addEventListener('click', () => {
+    hentikanBacksoundDashboard();
+    soundClick();
+    mulaiGame();
+  });
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      soundClick();
+      cekJawaban(btn.getAttribute('data-jawaban'));
+    });
+  });
+
+  restartBtn.addEventListener('click', () => {
+    soundClick();
+    mulaiGame();
+  });
+
+  homeBtn.addEventListener('click', () => {
+    soundClick();
+    kembaliKeDashboard();
+  });
+</script>
+
+</body>
+</html>

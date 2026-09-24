@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tebak Emosi 2 Pemain - TK Al Azhar 21</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+  html, body { margin:0; padding:0; width:100%; height:100%; font-family: Arial, sans-serif; overflow:hidden; }
+  .screen { position:absolute; top:0; left:0; width:100%; height:100vh; display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+  .screen.active { display:flex; }
+
+  /* ============ DASHBOARD ============ */
+  #dashboard-screen { background: linear-gradient(180deg,#6EC6FF 0%,#A8E6FF 40%,#C8F0B8 40%,#8FDB6F 100%); position:relative; overflow:hidden; }
+  .sun { position:absolute; top:6%; right:10%; font-size:90px; animation: spin-sun 8s linear infinite; z-index:1; }
+  @keyframes spin-sun { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+  .cloud-emoji { position:absolute; font-size:60px; opacity:0.95; z-index:1; }
+  .cloud-a { top:8%; left:6%; animation: drift 22s linear infinite; }
+  .cloud-b { top:14%; left:55%; animation: drift 28s linear infinite reverse; font-size:48px; }
+  .cloud-c { top:5%; left:32%; animation: drift 18s linear infinite; font-size:40px; }
+  @keyframes drift { 0%{transform:translateX(0)} 50%{transform:translateX(50px)} 100%{transform:translateX(0)} }
+  .flower { position:absolute; bottom:4%; font-size:50px; z-index:1; animation: sway 2.6s ease-in-out infinite; }
+  .flower1 { left:6%; } .flower2 { left:18%; font-size:40px; animation-delay:0.4s; }
+  .flower3 { right:8%; animation-delay:0.8s; } .flower4 { right:20%; font-size:42px; animation-delay:1.2s; }
+  @keyframes sway { 0%,100%{transform:rotate(-6deg)} 50%{transform:rotate(6deg)} }
+  .butterfly { position:absolute; font-size:40px; z-index:2; animation: fly-around 7s ease-in-out infinite; }
+  .butterfly1 { top:30%; left:15%; } .butterfly2 { top:45%; right:18%; animation-delay:1.5s; animation-duration:9s; }
+  @keyframes fly-around { 0%{transform:translate(0,0) rotate(0)} 25%{transform:translate(30px,-25px) rotate(10deg)} 50%{transform:translate(60px,0) rotate(-6deg)} 75%{transform:translate(30px,20px) rotate(8deg)} 100%{transform:translate(0,0) rotate(0)} }
+
+  #main-title { font-size:54px; font-weight:bold; color:#E65100; text-shadow:3px 3px 0 #fff,-1px -1px 0 #fff; margin-bottom:4px; z-index:3; }
+  #sub-title { font-size:30px; font-weight:bold; color:#5D4037; background:rgba(255,255,255,0.75); padding:8px 26px; border-radius:30px; margin-bottom:14px; z-index:3; }
+  #mascot { font-size:130px; z-index:3; animation: bounce-mascot 1.4s ease-in-out infinite; filter: drop-shadow(0 10px 8px rgba(0,0,0,0.18)); }
+  @keyframes bounce-mascot { 0%,100%{transform:translateY(0) rotate(-4deg)} 50%{transform:translateY(-22px) rotate(4deg)} }
+
+  #mode-buttons { display:flex; gap:24px; margin-top:16px; z-index:3; flex-wrap:wrap; justify-content:center; }
+  .mode-btn { font-size:36px; font-weight:bold; padding:22px 48px; border:none; border-radius:40px; cursor:pointer; box-shadow:0 10px 0 rgba(0,0,0,0.2); }
+  .mode-btn:active { transform: translateY(8px); box-shadow:0 2px 0 rgba(0,0,0,0.2); }
+  #btn-1p { background:#FFE066; color:#6b4b00; animation: pulse-btn 1.2s ease-in-out infinite; }
+  #btn-2p { background:#FF9F68; color:#fff; animation: pulse-btn 1.2s ease-in-out infinite 0.3s; }
+  @keyframes pulse-btn { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
+
+  /* ============ GAME SCREEN ============ */
+  #game-screen { background:#FFF8E7; position:relative; }
+
+  /* Skor 2 pemain */
+  #scoreboard-2p {
+    position:absolute; top:14px; left:0; width:100%;
+    display:none; justify-content:space-between; padding:0 24px; z-index:5;
+  }
+  #game-screen.mode-2p #scoreboard-2p { display:flex; }
+  .player-card {
+    display:flex; flex-direction:column; align-items:center;
+    background:#fff; border:5px solid #ddd; border-radius:22px;
+    padding:10px 26px; font-size:24px; font-weight:bold; color:#555;
+    box-shadow:0 6px 0 rgba(0,0,0,0.08); min-width:200px;
+    transition: all 0.25s;
+  }
+  .player-card .p-name { font-size:20px; }
+  .player-card .p-score { font-size:38px; color:#333; }
+  .player-card.active { border-color:#FFD700; background:linear-gradient(180deg,#FFF9C4,#FFE066); transform: scale(1.08); box-shadow:0 0 30px rgba(255,215,0,0.8), 0 6px 0 rgba(0,0,0,0.08); }
+  .player-card.p1.active { border-color:#42A5F5; background:linear-gradient(180deg,#E3F2FD,#90CAF9); }
+  .player-card.p2.active { border-color:#FF7043; background:linear-gradient(180deg,#FBE9E7,#FFAB91); }
+
+  /* Skor 1 pemain (mode lama) */
+  #score-box {
+    position:absolute; top:24px; right:32px; background:#fff;
+    border:4px solid #FFD166; border-radius:20px; padding:14px 28px;
+    font-size:32px; font-weight:bold; color:#444; box-shadow:0 6px 0 rgba(0,0,0,0.08);
+  }
+  #question-counter {
+    position:absolute; top:24px; left:32px; background:#fff;
+    border:4px solid #A8D8EA; border-radius:20px; padding:14px 28px;
+    font-size:28px; font-weight:bold; color:#444; box-shadow:0 6px 0 rgba(0,0,0,0.08);
+  }
+  #game-screen.mode-2p #score-box,
+  #game-screen.mode-2p #question-counter { display:none; }
+
+  /* Timer */
+  #timer-wrap {
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:180px; height:180px; display:none; z-index:4; pointer-events:none;
+  }
+  #game-screen.mode-2p #timer-wrap { display:none; } /* timer cuma muncul kalau diaktifkan */
+  #timer-wrap.on { display:block; }
+  #timer-ring { width:100%; height:100%; transform: rotate(-90deg); }
+  #timer-ring circle { fill:none; stroke-width:12; }
+  #timer-bg { stroke:#eee; }
+  #timer-fg { stroke:#4CAF50; stroke-linecap:round; transition: stroke-dashoffset 0.3s linear, stroke 0.3s; }
+  #timer-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:60px; font-weight:bold; color:#333; }
+  #timer-wrap.warning #timer-fg { stroke:#FF9800; }
+  #timer-wrap.danger  #timer-fg { stroke:#F44336; }
+  #timer-wrap.danger  #timer-text { color:#F44336; animation: pulse-btn 0.5s ease-in-out infinite; }
+
+  #title { font-size:44px; font-weight:bold; color:#6b4b3e; margin-bottom:10px; text-align:center; z-index:2; }
+  #emoji-display {
+    font-size:150px; line-height:1; margin:10px 0 30px 0; text-align:center;
+    filter: drop-shadow(0 8px 6px rgba(0,0,0,0.1)); animation: pop-in 0.4s ease; z-index:2;
+  }
+  @keyframes pop-in { 0%{transform:scale(0.3); opacity:0} 70%{transform:scale(1.1); opacity:1} 100%{transform:scale(1)} }
+
+  #buttons-grid { display:grid; grid-template-columns:repeat(2,minmax(200px,260px)); gap:24px; justify-content:center; z-index:2; }
+  .emo-btn {
+    min-width:200px; min-height:100px; font-size:40px; font-weight:bold;
+    font-family:Arial, sans-serif; border:none; border-radius:24px; cursor:pointer;
+    color:#3a3a3a; box-shadow:0 8px 0 rgba(0,0,0,0.15);
+    transition: transform 0.08s ease, box-shadow 0.08s ease;
+  }
+  .emo-btn:active { transform:translateY(6px); box-shadow:0 2px 0 rgba(0,0,0,0.15); }
+  .emo-btn:disabled { opacity:0.55; cursor:default; }
+  .btn-senang { background:#FFE66D; }
+  .btn-sedih  { background:#A8D8EA; }
+  .btn-marah  { background:#FF6B6B; color:#fff; }
+  .btn-netral { background:#B5EAD7; }
+
+  #feedback { margin-top:22px; font-size:42px; font-weight:bold; min-height:60px; text-align:center; z-index:2; }
+  .feedback-correct { color:#2e7d32; }
+  .feedback-wrong { color:#6d5b3e; }
+
+  /* ============ END SCREEN ============ */
+  #end-screen { background:#FFF8E7; padding:20px; }
+  #end-screen h1 { font-size:46px; color:#6b4b3e; margin-bottom:6px; }
+  #final-emoji { font-size:110px; margin-bottom:4px; animation: bounce-mascot 1.4s ease-in-out infinite; }
+  #final-score { font-size:52px; font-weight:bold; color:#FF6B6B; margin:12px 0 8px 0; }
+  #final-message { font-size:36px; font-weight:bold; margin-bottom:22px; }
+
+  /* Hasil 2 pemain */
+  #result-2p { display:none; gap:30px; margin:10px 0 22px 0; flex-wrap:wrap; justify-content:center; }
+  #end-screen.mode-2p #result-2p { display:flex; }
+  #end-screen.mode-2p #final-score { display:none; }
+  .result-card {
+    background:#fff; border:6px solid #ddd; border-radius:28px;
+    padding:18px 40px; min-width:240px;
+    box-shadow:0 8px 0 rgba(0,0,0,0.1);
+  }
+  .result-card.winner { border-color:#FFD700; background:linear-gradient(180deg,#FFF9C4,#FFE066); transform:scale(1.1); box-shadow:0 0 40px rgba(255,215,0,0.7), 0 8px 0 rgba(0,0,0,0.1); }
+  .result-card .r-name { font-size:26px; font-weight:bold; color:#555; }
+  .result-card .r-score { font-size:56px; font-weight:bold; color:#333; }
+  .result-card .r-emoji { font-size:60px; }
+
+  #end-buttons { display:flex; gap:24px; flex-wrap:wrap; justify-content:center; }
+  #restart-btn, #home-btn {
+    font-size:32px; font-weight:bold; padding:18px 38px; border:none;
+    border-radius:24px; cursor:pointer; box-shadow:0 8px 0 rgba(0,0,0,0.15);
+  }
+  #restart-btn { background:#FFE066; color:#3a3a3a; }
+  #home-btn { background:#A8D8EA; color:#2a2a2a; }
+  #restart-btn:active, #home-btn:active { transform:translateY(6px); box-shadow:0 2px 0 rgba(0,0,0,0.15); }
+
+  /* Confetti */
+  .confetti { position:fixed; top:-20px; width:14px; height:14px; opacity:0.9; pointer-events:none; z-index:50; animation-name:fall; animation-timing-function:linear; animation-fill-mode:forwards; }
+  @keyframes fall { 0%{transform:translateY(0) rotate(0)} 100%{transform:translateY(110vh) rotate(720deg); opacity:0.9} }
+
+  @media (max-width:700px) {
+    #emoji-display { font-size:100px; }
+    .emo-btn { min-width:140px; min-height:80px; font-size:28px; }
+    #title { font-size:30px; }
+    #feedback { font-size:30px; }
+    #main-title { font-size:34px; }
+    #mascot { font-size:100px; }
+    .mode-btn { font-size:26px; padding:16px 32px; }
+    #restart-btn, #home-btn { font-size:22px; padding:14px 24px; }
+    .player-card { min-width:140px; padding:8px 18px; font-size:18px; }
+    .player-card .p-score { font-size:30px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== DASHBOARD ===================== -->
+<div id="dashboard-screen" class="screen active">
+  <div class="sun">☀️</div>
+  <div class="cloud-emoji cloud-a">☁️</div>
+  <div class="cloud-emoji cloud-b">☁️</div>
+  <div class="cloud-emoji cloud-c">☁️</div>
+  <div class="butterfly butterfly1">🦋</div>
+  <div class="butterfly butterfly2">🦋</div>
+  <div class="flower flower1">🌻</div>
+  <div class="flower flower2">🌷</div>
+  <div class="flower flower3">🌼</div>
+  <div class="flower flower4">🌻</div>
+
+  <div id="main-title">🎮 TEBAK EMOSI 🎮</div>
+  <div id="sub-title">Game TK Al Azhar 21</div>
+  <div id="mascot">🐰</div>
+  <div id="mode-buttons">
+    <button id="btn-1p" class="mode-btn">👤 1 PEMAIN</button>
+    <button id="btn-2p" class="mode-btn">👥 2 PEMAIN</button>
+  </div>
+</div>
+
+<!-- ===================== GAME ===================== -->
+<div id="game-screen" class="screen">
+  <!-- Skor 2 pemain -->
+  <div id="scoreboard-2p">
+    <div class="player-card p1" id="card-p1">
+      <div class="p-name">🐰 PEMAIN 1</div>
+      <div class="p-score" id="score-p1">0</div>
+    </div>
+    <div class="player-card p2" id="card-p2">
+      <div class="p-name">🐻 PEMAIN 2</div>
+      <div class="p-score" id="score-p2">0</div>
+    </div>
+  </div>
+
+  <!-- Skor 1 pemain -->
+  <div id="question-counter">Soal: 1/10</div>
+  <div id="score-box">Skor: 0</div>
+
+  <!-- Timer ring -->
+  <div id="timer-wrap">
+    <svg id="timer-ring" viewBox="0 0 180 180">
+      <circle id="timer-bg" cx="90" cy="90" r="78"></circle>
+      <circle id="timer-fg" cx="90" cy="90" r="78" stroke-dasharray="490" stroke-dashoffset="0"></circle>
+    </svg>
+    <div id="timer-text">10</div>
+  </div>
+
+  <div id="title">Tebak Emosinya! 🧐</div>
+  <div id="emoji-display">😊</div>
+
+  <div id="buttons-grid">
+    <button class="emo-btn btn-senang" data-jawaban="senang">😀 SENANG</button>
+    <button class="emo-btn btn-sedih" data-jawaban="sedih">😢 SEDIH</button>
+    <button class="emo-btn btn-marah" data-jawaban="marah">😠 MARAH</button>
+    <button class="emo-btn btn-netral" data-jawaban="netral">😐 NETRAL</button>
+  </div>
+
+  <div id="feedback"></div>
+</div>
+
+<!-- ===================== LAYAR AKHIR ===================== -->
+<div id="end-screen" class="screen">
+  <div id="final-emoji">🏆</div>
+  <h1 id="end-title">Permainan Selesai!</h1>
+  <div id="final-score">Skor Akhir: 0/10</div>
+  <div id="result-2p">
+    <div class="result-card" id="result-p1">
+      <div class="r-emoji">🐰</div>
+      <div class="r-name">PEMAIN 1</div>
+      <div class="r-score" id="final-p1">0</div>
+    </div>
+    <div class="result-card" id="result-p2">
+      <div class="r-emoji">🐻</div>
+      <div class="r-name">PEMAIN 2</div>
+      <div class="r-score" id="final-p2">0</div>
+    </div>
+  </div>
+  <div id="final-message">Hebat!</div>
+  <div id="end-buttons">
+    <button id="restart-btn">🔄 MAIN LAGI</button>
+    <button id="home-btn">🏠 KEMBALI KE DASHBOARD</button>
+  </div>
+</div>
+
+<script>
+  // ================= ELEMEN =================
+  const dashboardScreen = document.getElementById('dashboard-screen');
+  const gameScreen = document.getElementById('game-screen');
+  const endScreen = document.getElementById('end-screen');
+
+  const btn1p = document.getElementById('btn-1p');
+  const btn2p = document.getElementById('btn-2p');
+  const restartBtn = document.getElementById('restart-btn');
+  const homeBtn = document.getElementById('home-btn');
+
+  const emojiDisplay = document.getElementById('emoji-display');
+  const feedbackEl = document.getElementById('feedback');
+  const scoreBox = document.getElementById('score-box');
+  const questionCounter = document.getElementById('question-counter');
+  const buttons = document.querySelectorAll('.emo-btn');
+
+  const finalScoreEl = document.getElementById('final-score');
+  const finalMessageEl = document.getElementById('final-message');
+  const finalEmojiEl = document.getElementById('final-emoji');
+  const endTitleEl = document.getElementById('end-title');
+
+  const cardP1 = document.getElementById('card-p1');
+  const cardP2 = document.getElementById('card-p2');
+  const scoreP1El = document.getElementById('score-p1');
+  const scoreP2El = document.getElementById('score-p2');
+  const resultP1 = document.getElementById('result-p1');
+  const resultP2 = document.getElementById('result-p2');
+  const finalP1El = document.getElementById('final-p1');
+  const finalP2El = document.getElementById('final-p2');
+
+  const timerWrap = document.getElementById('timer-wrap');
+  const timerText = document.getElementById('timer-text');
+  const timerFg = document.getElementById('timer-fg');
+
+  // ================= DATA SOAL =================
+  const soalMentah = [
+    { emoji:'😊', jawaban:'senang' }, { emoji:'😄', jawaban:'senang' }, { emoji:'😁', jawaban:'senang' },
+    { emoji:'😢', jawaban:'sedih' },  { emoji:'😞', jawaban:'sedih' },  { emoji:'😔', jawaban:'sedih' },
+    { emoji:'😠', jawaban:'marah' },  { emoji:'😡', jawaban:'marah' },
+    { emoji:'😐', jawaban:'netral' }, { emoji:'😶', jawaban:'netral' }
+  ];
+
+  // ================= STATE =================
+  let soalList = [];
+  let indexSoal = 0;
+  let skor = 0;            // mode 1P
+  let skorP1 = 0, skorP2 = 0;
+  let pemainAktif = 1;     // 1 atau 2
+  let mode = 1;            // 1 = 1 pemain, 2 = 2 pemain
+  const totalSoal = 10;
+
+  // Timer
+  let timerInterval = null;
+  let waktuSisa = 10;
+  const TOTAL_WAKTU = 10;
+
+  // ================= AUDIO =================
+  let audioCtx = null;
+  function getAudioCtx() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+  function playTone(freq, duration, type, startTime, gainPeak) {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    osc.type = type || 'sine';
+    osc.frequency.value = freq;
+    osc.connect(gainNode); gainNode.connect(ctx.destination);
+    const t0 = ctx.currentTime + (startTime || 0);
+    gainNode.gain.setValueAtTime(0, t0);
+    gainNode.gain.linearRampToValueAtTime(gainPeak, t0 + 0.02);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, t0 + duration);
+    osc.start(t0); osc.stop(t0 + duration + 0.05);
+  }
+  function soundClick()   { playTone(700, 0.05, 'square', 0, 0.3); }
+  function soundCorrect() {
+    playTone(523.25, 0.15, 'triangle', 0, 0.7);
+    playTone(659.25, 0.15, 'triangle', 0.12, 0.7);
+    playTone(783.99, 0.15, 'triangle', 0.24, 0.7);
+    playTone(1046.50, 0.2, 'triangle', 0.36, 0.7);
+  }
+  function soundWrong() {
+    playTone(329.63, 0.15, 'sine', 0, 0.5);
+    playTone(261.63, 0.18, 'sine', 0.12, 0.5);
+  }
+  function soundTick() { playTone(880, 0.05, 'sine', 0, 0.2); }
+  function soundTimeUp() {
+    playTone(400, 0.15, 'sawtooth', 0, 0.4);
+    playTone(300, 0.25, 'sawtooth', 0.15, 0.4);
+  }
+
+  function ucapkan(teks, rate, pitch) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(teks);
+    u.lang = 'id-ID'; u.rate = rate || 0.9; u.pitch = pitch || 1.0; u.volume = 1.0;
+    window.speechSynthesis.speak(u);
+  }
+
+  // Backsound dashboard
+  let backsoundInterval = null, backsoundOn = false;
+  function nadaBacksound(freq, mulai, durasi, gain) {
+    const ctx = getAudioCtx();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type='sine'; o.frequency.value=freq; o.connect(g); g.connect(ctx.destination);
+    const t0 = ctx.currentTime + mulai;
+    g.gain.setValueAtTime(0, t0);
+    g.gain.linearRampToValueAtTime(gain, t0 + 0.05);
+    g.gain.linearRampToValueAtTime(0, t0 + durasi);
+    o.start(t0); o.stop(t0 + durasi + 0.05);
+  }
+  function satuLoopBacksound() {
+    const nada = [523.25,659.25,783.99,659.25,523.25,659.25,783.99,659.25];
+    const d = 0.35;
+    nada.forEach((f,i)=>nadaBacksound(f, i*d, d*0.9, 0.15));
+    return nada.length * d * 1000;
+  }
+  function mulaiBacksound() {
+    if (backsoundOn) return;
+    backsoundOn = true;
+    const loop = () => { if (!backsoundOn) return; backsoundInterval = setTimeout(loop, satuLoopBacksound()); };
+    loop();
+  }
+  function hentikanBacksound() {
+    backsoundOn = false;
+    if (backsoundInterval) { clearTimeout(backsoundInterval); backsoundInterval = null; }
+  }
+
+  document.addEventListener('pointerdown', function initAudio() {
+    getAudioCtx();
+    if (dashboardScreen.classList.contains('active')) mulaiBacksound();
+    document.removeEventListener('pointerdown', initAudio);
+  }, { once:true });
+
+  // ================= NAVIGASI =================
+  function tampilkanLayar(l) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    l.classList.add('active');
+  }
+
+  // ================= TIMER =================
+  function mulaiTimer() {
+    if (mode !== 2) return; // timer hanya di mode 2 pemain
+    hentikanTimer();
+    waktuSisa = TOTAL_WAKTU;
+    updateTimerUI();
+    timerWrap.classList.add('on');
+    timerWrap.classList.remove('warning','danger');
+
+    timerInterval = setInterval(() => {
+      waktuSisa--;
+      updateTimerUI();
+      if (waktuSisa <= 3 && waktuSisa > 0) soundTick();
+      if (waktuSisa <= 0) {
+        hentikanTimer();
+        waktuHabis();
+      }
+    }, 1000);
+  }
+  function hentikanTimer() {
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  }
+  function updateTimerUI() {
+    timerText.textContent = Math.max(0, waktuSisa);
+    const total = 490; // 2*pi*78
+    const offset = total * (1 - waktuSisa / TOTAL_WAKTU);
+    timerFg.style.strokeDashoffset = offset;
+    timerWrap.classList.toggle('warning', waktuSisa <= 6 && waktuSisa > 3);
+    timerWrap.classList.toggle('danger',  waktuSisa <= 3);
+  }
+  function sembunyikanTimer() {
+    hentikanTimer();
+    timerWrap.classList.remove('on','warning','danger');
+  }
+
+  // ================= GAME =================
+  function acakSoal(arr) {
+    const a = arr.slice();
+    for (let i=a.length-1; i>0; i--) {
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
+
+  function mulaiGame(modeBaru) {
+    mode = modeBaru;
+    soalList = acakSoal(soalMentah).slice(0, totalSoal);
+    indexSoal = 0; skor = 0; skorP1 = 0; skorP2 = 0; pemainAktif = 1;
+
+    gameScreen.classList.toggle('mode-2p', mode === 2);
+    endScreen.classList.toggle('mode-2p', mode === 2);
+
+    updateSkorTampilan();
+    tampilkanLayar(gameScreen);
+    tampilkanSoal();
+  }
+
+  function kembaliKeDashboard() {
+    sembunyikanTimer();
+    gameScreen.classList.remove('mode-2p');
+    endScreen.classList.remove('mode-2p');
+    tampilkanLayar(dashboardScreen);
+    mulaiBacksound();
+  }
+
+  function updateSkorTampilan() {
+    if (mode === 2) {
+      scoreP1El.textContent = skorP1;
+      scoreP2El.textContent = skorP2;
+      cardP1.classList.toggle('active', pemainAktif === 1);
+      cardP2.classList.toggle('active', pemainAktif === 2);
+    } else {
+      scoreBox.textContent = 'Skor: ' + skor;
+    }
+  }
+
+  function tampilkanSoal() {
+    feedbackEl.textContent = '';
+    feedbackEl.className = '';
+    questionCounter.textContent = 'Soal: ' + (indexSoal+1) + '/' + totalSoal;
+
+    // Tentukan pemain aktif di mode 2P: bergantian P1, P2, P1, P2 ...
+    if (mode === 2) {
+      pemainAktif = (indexSoal % 2 === 0) ? 1 : 2;
+      updateSkorTampilan();
+    }
+
+    const soal = soalList[indexSoal];
+    emojiDisplay.textContent = soal.emoji;
+    emojiDisplay.style.animation = 'none';
+    void emojiDisplay.offsetWidth;
+    emojiDisplay.style.animation = 'pop-in 0.4s ease';
+
+    buttons.forEach(b => b.disabled = false);
+    mulaiTimer();
+  }
+
+  function cekJawaban(jawabanDipilih) {
+    const soal = soalList[indexSoal];
+    const benar = (jawabanDipilih === soal.jawaban);
+
+    if (mode === 2) {
+      // mode 2P: hanya 1x jawab
+      hentikanTimer();
+      sembunyikanTimer();
+      buttons.forEach(b => b.disabled = true);
+
+      if (benar) {
+        soundCorrect();
+        if (pemainAktif === 1) skorP1++; else skorP2++;
+        updateSkorTampilan();
+        feedbackEl.textContent = '🎉 BENAR! +1';
+        feedbackEl.className = 'feedback-correct';
+        buatConfetti();
+        setTimeout(() => ucapkan('Hebat!', 0.9, 1.2), 400);
+      } else {
+        soundWrong();
+        feedbackEl.textContent = '❌ SALAH!';
+        feedbackEl.className = 'feedback-wrong';
+        setTimeout(() => ucapkan('Belum tepat!', 0.9, 1.0), 350);
+      }
+
+      setTimeout(() => {
+        indexSoal++;
+        if (indexSoal >= totalSoal) tampilkanLayarAkhir();
+        else tampilkanSoal();
+      }, 1600);
+
+    } else {
+      // mode 1P (seperti aslinya, boleh coba lagi)
+      if (benar) {
+        soundCorrect();
+        setTimeout(() => ucapkan('Hebat!', 0.9, 1.2), 500);
+        skor++; updateSkorTampilan();
+        feedbackEl.textContent = '🎉 SELAMAT! BENAR! 🎉';
+        feedbackEl.className = 'feedback-correct';
+        buatConfetti();
+        buttons.forEach(b => b.disabled = true);
+        setTimeout(() => {
+          indexSoal++;
+          if (indexSoal >= totalSoal) tampilkanLayarAkhir();
+          else tampilkanSoal();
+        }, 1800);
+      } else {
+        soundWrong();
+        setTimeout(() => ucapkan('Coba lagi ya!', 0.9, 1.0), 350);
+        feedbackEl.textContent = '🤔 Coba lagi ya!';
+        feedbackEl.className = 'feedback-wrong';
+      }
+    }
+  }
+
+  function waktuHabis() {
+    soundTimeUp();
+    buttons.forEach(b => b.disabled = true);
+    feedbackEl.textContent = '⏰ WAKTU HABIS!';
+    feedbackEl.className = 'feedback-wrong';
+    setTimeout(() => ucapkan('Waktu habis!', 0.9, 1.0), 200);
+    setTimeout(() => {
+      indexSoal++;
+      if (indexSoal >= totalSoal) tampilkanLayarAkhir();
+      else tampilkanSoal();
+    }, 1600);
+  }
+
+  function tampilkanLayarAkhir() {
+    sembunyikanTimer();
+    tampilkanLayar(endScreen);
+    finalEmojiEl.textContent = '🏆';
+
+    if (mode === 2) {
+      finalP1El.textContent = skorP1;
+      finalP2El.textContent = skorP2;
+      resultP1.classList.remove('winner');
+      resultP2.classList.remove('winner');
+
+      let pesan = '', ucapan = '';
+      if (skorP1 > skorP2) {
+        pesan = '🐰 PEMAIN 1 MENANG! 🏆';
+        ucapan = 'Pemain satu menang! Selamat!';
+        resultP1.classList.add('winner');
+      } else if (skorP2 > skorP1) {
+        pesan = '🐻 PEMAIN 2 MENANG! 🏆';
+        ucapan = 'Pemain dua menang! Selamat!';
+        resultP2.classList.add('winner');
+      } else {
+        pesan = '🤝 SERI! KALIAN HEBAT! 🤝';
+        ucapan = 'Seri! Kalian berdua hebat!';
+        resultP1.classList.add('winner');
+        resultP2.classList.add('winner');
+      }
+      finalMessageEl.textContent = pesan;
+      playFanfare();
+      setTimeout(() => ucapkan(ucapan, 0.9, 1.15), 1200);
+
+    } else {
+      finalScoreEl.textContent = 'Skor Akhir: ' + skor + '/' + totalSoal;
+      let pesan = '', emoji = '', ucapan = '';
+      if (skor >= 9)      { pesan='🏆 LUAR BIASA! Kamu Juara! 🏆'; emoji='🏆'; ucapan='Luar biasa! Kamu juara!'; }
+      else if (skor >= 7) { pesan='⭐ HEBAT! Kamu Pintar! ⭐';     emoji='⭐'; ucapan='Hebat! Kamu pintar!'; }
+      else if (skor >= 5) { pesan='👍 BAGUS! Ayo Coba Lagi! 👍';   emoji='👍'; ucapan='Bagus! Ayo coba lagi!'; }
+      else                { pesan='💪 SEMANGAT! Kamu Bisa! 💪';   emoji='💪'; ucapan='Semangat! Kamu bisa!'; }
+      finalMessageEl.textContent = pesan;
+      finalEmojiEl.textContent = emoji;
+      putarMelodiSkorAkhir(skor);
+      setTimeout(() => ucapkan(ucapan, 0.9, 1.1), 1300);
+    }
+  }
+
+  function putarFanfare() {
+    const nada = [523.25,659.25,783.99,1046.50,659.25,783.99,1318.51];
+    nada.forEach((f,i)=>playTone(f,0.22,'triangle',i*0.18,0.7));
+  }
+  function putarMelodiSkorAkhir(s) {
+    if (s >= 9) putarFanfare();
+    else if (s >= 7) { playTone(523.25,0.2,'triangle',0,0.6); playTone(659.25,0.2,'triangle',0.18,0.6); playTone(783.99,0.25,'triangle',0.36,0.6); playTone(1046.50,0.3,'triangle',0.54,0.6); }
+    else if (s >= 5) { playTone(523.25,0.25,'sine',0,0.5); playTone(659.25,0.25,'sine',0.2,0.5); playTone(783.99,0.3,'sine',0.4,0.5); }
+    else { playTone(523.25,0.2,'square',0,0.5); playTone(523.25,0.2,'square',0.22,0.5); playTone(783.99,0.2,'square',0.44,0.5); playTone(783.99,0.25,'square',0.66,0.5); }
+  }
+
+  // ================= CONFETTI =================
+  function buatConfetti() {
+    const warna = ['#FFE66D','#A8D8EA','#FF6B6B','#B5EAD7','#FFD166','#c8a2ff'];
+    for (let i=0; i<45; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = Math.random()*100 + 'vw';
+      c.style.background = warna[Math.floor(Math.random()*warna.length)];
+      c.style.width = (8 + Math.random()*10) + 'px';
+      c.style.height = c.style.width;
+      c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      const d = 1.8 + Math.random()*1.4;
+      c.style.animationDuration = d + 's';
+      c.style.animationDelay = (Math.random()*0.3) + 's';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), (d+0.5)*1000);
+    }
+  }
+
+  // ================= EVENTS =================
+  btn1p.addEventListener('click', () => { hentikanBacksound(); soundClick(); mulaiGame(1); });
+  btn2p.addEventListener('click', () => { hentikanBacksound(); soundClick(); mulaiGame(2); });
+
+  buttons.forEach(b => b.addEventListener('click', () => {
+    soundClick();
+    cekJawaban(b.getAttribute('data-jawaban'));
+  }));
+
+  restartBtn.addEventListener('click', () => { soundClick(); mulaiGame(mode); });
+  homeBtn.addEventListener('click', () => { soundClick(); kembaliKeDashboard(); });
+</script>
+
+</body>
+</html>

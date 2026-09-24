@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🐰 Petualangan Emosi Kelinci Kecil 🐰</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Arial','Comic Sans MS',sans-serif;user-select:none;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;min-height:100vh;overflow-x:hidden;}
+body{display:flex;justify-content:center;align-items:flex-start;background:#FFF8E7;}
+#app{width:100%;max-width:1500px;min-height:100vh;padding:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+
+/* DASHBOARD */
+#dashboard{position:relative;width:100%;min-height:95vh;border-radius:40px;background:linear-gradient(180deg,#87CEEB 0%,#B0E0FF 30%,#FFE4A0 70%,#90EE90 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 15px 40px rgba(0,0,0,0.15);padding:30px 20px;}
+.cloud{position:absolute;background:white;border-radius:50%;opacity:0.9;pointer-events:none;z-index:1;}
+.cloud::before,.cloud::after{content:'';position:absolute;background:white;border-radius:50%;}
+.cloud1{width:110px;height:55px;top:8%;left:-150px;animation:cloudMove 22s linear infinite;}
+.cloud1::before{width:65px;height:65px;top:-28px;left:15px;}
+.cloud1::after{width:55px;height:55px;top:-20px;left:55px;}
+.cloud2{width:140px;height:65px;top:18%;left:-180px;animation:cloudMove 32s linear infinite 6s;}
+.cloud2::before{width:75px;height:75px;top:-32px;left:22px;}
+.cloud2::after{width:60px;height:60px;top:-24px;left:70px;}
+.cloud3{width:90px;height:45px;top:5%;left:-120px;animation:cloudMove 18s linear infinite 12s;}
+.cloud3::before{width:55px;height:55px;top:-24px;left:12px;}
+.cloud3::after{width:45px;height:45px;top:-16px;left:46px;}
+@keyframes cloudMove{0%{left:-220px;}100%{left:110%;}}
+.sun{position:absolute;top:4%;right:7%;font-size:90px;animation:sunPulse 3s ease-in-out infinite;pointer-events:none;filter:drop-shadow(0 0 30px rgba(255,215,0,0.9));z-index:1;}
+@keyframes sunPulse{0%,100%{transform:scale(1) rotate(0);}50%{transform:scale(1.15) rotate(15deg);}}
+.rainbow{position:absolute;top:10%;left:50%;transform:translateX(-50%);font-size:110px;opacity:0.6;pointer-events:none;letter-spacing:-18px;z-index:1;}
+.grass{position:absolute;bottom:0;left:0;width:100%;height:130px;background:linear-gradient(180deg,transparent,#7CCD7C 30%,#5cb85c 100%);border-radius:0 0 40px 40px;pointer-events:none;z-index:2;}
+.flowers{position:absolute;bottom:15px;width:100%;display:flex;justify-content:space-around;padding:0 40px;font-size:55px;pointer-events:none;z-index:3;}
+.flowers span{animation:sway 3s ease-in-out infinite;display:inline-block;}
+.flowers span:nth-child(2){animation-delay:0.6s;}
+.flowers span:nth-child(3){animation-delay:1.2s;}
+.flowers span:nth-child(4){animation-delay:0.3s;}
+.flowers span:nth-child(5){animation-delay:0.9s;}
+@keyframes sway{0%,100%{transform:rotate(-6deg) translateY(0);}50%{transform:rotate(6deg) translateY(-10px);}}
+.butterfly{position:absolute;font-size:45px;pointer-events:none;z-index:4;}
+.bf1{top:25%;left:8%;animation:fly1 7s ease-in-out infinite;}
+.bf2{top:40%;right:10%;animation:fly2 9s ease-in-out infinite 1.5s;}
+.bf3{top:60%;left:18%;animation:fly3 8s ease-in-out infinite 3s;}
+@keyframes fly1{0%,100%{transform:translate(0,0) rotate(0);}25%{transform:translate(70px,-50px) rotate(20deg);}50%{transform:translate(130px,-10px) rotate(-15deg);}75%{transform:translate(60px,40px) rotate(12deg);}}
+@keyframes fly2{0%,100%{transform:translate(0,0) rotate(0);}25%{transform:translate(-60px,-60px) rotate(-18deg);}50%{transform:translate(-120px,15px) rotate(10deg);}75%{transform:translate(-45px,50px) rotate(-10deg);}}
+@keyframes fly3{0%,100%{transform:translate(0,0) rotate(0);}33%{transform:translate(80px,-40px) rotate(15deg);}66%{transform:translate(-50px,-60px) rotate(-20deg);}}
+.bunny-mascot{font-size:190px;animation:bunnySway 2.2s ease-in-out infinite;z-index:5;position:relative;filter:drop-shadow(0 12px 22px rgba(0,0,0,0.18));margin-bottom:5px;cursor:pointer;}
+@keyframes bunnySway{0%,100%{transform:rotate(-6deg) translateY(0);}50%{transform:rotate(6deg) translateY(-18px);}}
+.dashboard-title{font-size:60px;font-weight:900;color:#8B4513;text-shadow:4px 4px 0 #FFD700,7px 7px 12px rgba(0,0,0,0.22);z-index:5;text-align:center;line-height:1.15;margin-bottom:5px;position:relative;}
+.dashboard-sub{font-size:34px;color:#5D3A1A;font-weight:700;z-index:5;text-align:center;text-shadow:2px 2px 4px rgba(255,255,255,0.9);margin-bottom:6px;position:relative;}
+.dashboard-sub2{font-size:26px;color:#7B5B3A;font-weight:700;z-index:5;background:rgba(255,255,255,0.85);padding:8px 28px;border-radius:30px;margin-bottom:28px;border:3px solid #FFD700;position:relative;}
+.btn-start{font-size:46px;font-weight:900;padding:30px 70px;border:none;border-radius:90px;background:linear-gradient(180deg,#FFE066,#FFD700,#FFC107);color:#8B4513;cursor:pointer;z-index:100;position:relative;box-shadow:0 12px 0 #E6A800,0 18px 35px rgba(0,0,0,0.28);transition:all 0.15s;animation:pulseBtn 1.8s ease-in-out infinite;letter-spacing:2px;display:flex;align-items:center;gap:15px;pointer-events:auto;}
+.btn-start:active{transform:translateY(7px);box-shadow:0 5px 0 #E6A800,0 10px 18px rgba(0,0,0,0.2);}
+.btn-start:hover{filter:brightness(1.05);}
+@keyframes pulseBtn{0%,100%{transform:scale(1);}50%{transform:scale(1.07);}}
+
+/* GAME SCREEN */
+#gameScreen{display:none;width:100%;max-width:1350px;min-height:95vh;background:#FFF8E7;border-radius:40px;padding:25px 30px 30px;box-shadow:0 15px 40px rgba(0,0,0,0.12);flex-direction:column;align-items:center;position:relative;}
+.top-bar{width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:15px;flex-wrap:wrap;}
+.progress-bar{display:flex;gap:10px;}
+.progress-dot{width:55px;height:55px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;background:#E0E0E0;color:#999;transition:all 0.3s;border:3px solid #ccc;}
+.progress-dot.active{background:#FFD700;color:#8B4513;border-color:#FFA500;transform:scale(1.18);box-shadow:0 0 22px rgba(255,215,0,0.7);}
+.progress-dot.done{background:#4CAF50;color:white;border-color:#388E3C;}
+.sound-controls{display:flex;gap:10px;}
+.sound-btn{width:65px;height:65px;border-radius:50%;border:3px solid #FF9800;background:#FFF3CD;font-size:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 0 #E6A800;transition:all 0.15s;}
+.sound-btn:active{transform:translateY(4px);box-shadow:0 1px 0 #E6A800;}
+.sound-btn.muted{background:#FFCDD2;border-color:#F44336;}
+.scene-title{font-size:42px;font-weight:900;color:#5D3A1A;text-align:center;margin:5px 0 18px;line-height:1.25;}
+
+.story-card{width:100%;max-width:1100px;background:linear-gradient(135deg,#FFFFFF,#FFF9E6);border:5px solid #FFD700;border-radius:30px;padding:25px 35px;margin-bottom:25px;display:flex;align-items:center;gap:25px;box-shadow:0 10px 30px rgba(0,0,0,0.08);position:relative;}
+.story-card.speaking{border-color:#4CAF50;box-shadow:0 0 35px rgba(76,175,80,0.5);animation:pulseStory 1.2s ease-in-out infinite;}
+@keyframes pulseStory{0%,100%{transform:scale(1);}50%{transform:scale(1.015);}}
+.speaker-icon{font-size:70px;flex-shrink:0;animation:speakerBob 1.5s ease-in-out infinite;}
+.speaker-icon.silent{opacity:0.4;animation:none;}
+@keyframes speakerBob{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-8px) scale(1.1);}}
+.story-text{flex:1;font-size:28px;color:#6B4A1A;line-height:1.5;font-weight:600;}
+.narator-label{display:inline-block;background:#FFD700;color:#5D3A1A;padding:5px 18px;border-radius:20px;font-size:20px;font-weight:900;margin-bottom:12px;letter-spacing:1px;}
+
+.choices{display:flex;gap:20px;width:100%;max-width:1100px;margin-bottom:22px;flex-wrap:wrap;justify-content:center;}
+.choice-btn{flex:1;min-width:280px;min-height:210px;border:5px solid rgba(0,0,0,0.1);border-radius:30px;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:18px;box-shadow:0 8px 0 rgba(0,0,0,0.15);position:relative;overflow:hidden;}
+.choice-btn:active{transform:translateY(5px);box-shadow:0 3px 0 rgba(0,0,0,0.15);}
+.choice-btn.disabled{pointer-events:none;opacity:0.55;}
+.choice-btn.correct{border-color:#4CAF50!important;box-shadow:0 0 35px rgba(76,175,80,0.8);animation:correctPop 0.5s ease-out;}
+.choice-btn.wrong{border-color:#F44336!important;box-shadow:0 0 25px rgba(244,67,54,0.6);animation:wrongShake 0.5s ease-out;}
+@keyframes correctPop{0%{transform:scale(1);}50%{transform:scale(1.08);}100%{transform:scale(1);}}
+@keyframes wrongShake{0%,100%{transform:translateX(0);}25%{transform:translateX(-10px);}75%{transform:translateX(10px);}}
+.choice-btn.a{background:linear-gradient(180deg,#C8F5D8,#B5EAD7);}
+.choice-btn.b{background:linear-gradient(180deg,#C5E8F5,#A8D8EA);}
+.choice-btn.c{background:linear-gradient(180deg,#FFF2A8,#FFE66D);}
+.choice-emoji{font-size:80px;animation:emojiPulse 1.5s ease-in-out infinite;}
+@keyframes emojiPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
+.choice-label{font-size:28px;font-weight:900;color:#3A2A1A;text-align:center;line-height:1.2;padding:0 8px;}
+.choice-sound-badge{position:absolute;top:10px;right:12px;background:rgba(255,255,255,0.9);border-radius:50%;width:42px;height:42px;font-size:20px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.15);}
+
+.feedback-box{width:100%;max-width:1100px;border-radius:30px;padding:25px 35px;margin-bottom:18px;display:none;animation:fadeInUp 0.5s ease-out;text-align:center;}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(25px);}to{opacity:1;transform:translateY(0);}}
+.feedback-box.show{display:block;}
+.feedback-box.correct-fb{background:linear-gradient(135deg,#E8F5E9,#C8E6C9);border:5px solid #4CAF50;}
+.feedback-box.wrong-fb{background:linear-gradient(135deg,#FFF3E0,#FFE0B2);border:5px solid #FF9800;}
+.feedback-emoji{font-size:90px;margin-bottom:10px;animation:emojiBounce 0.7s ease-in-out;}
+@keyframes emojiBounce{0%{transform:scale(0);}60%{transform:scale(1.3);}100%{transform:scale(1);}}
+.feedback-title{font-size:38px;font-weight:900;margin-bottom:12px;}
+.feedback-title.correct-ft{color:#2E7D32;}
+.feedback-title.wrong-ft{color:#E65100;}
+.feedback-text{font-size:26px;line-height:1.45;color:#4A3520;font-weight:600;}
+
+.moral-box{width:100%;max-width:1100px;background:linear-gradient(135deg,#FFF9C4,#FFF3CD);border:5px solid #FF9800;border-radius:30px;padding:22px 35px;margin-bottom:18px;display:none;animation:moralGlow 2s ease-in-out infinite;}
+.moral-box.show{display:block;}
+@keyframes moralGlow{0%,100%{box-shadow:0 0 20px rgba(255,193,7,0.4);}50%{box-shadow:0 0 45px rgba(255,193,7,0.85);}}
+.moral-label{font-size:26px;font-weight:900;color:#E65100;margin-bottom:10px;text-align:center;letter-spacing:1px;}
+.moral-text{font-size:32px;font-weight:800;color:#5D3A1A;text-align:center;line-height:1.4;}
+
+.nav-buttons{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;width:100%;max-width:1100px;}
+.nav-btn{font-size:30px;font-weight:900;padding:20px 45px;border:none;border-radius:70px;cursor:pointer;transition:all 0.15s;color:white;box-shadow:0 7px 0 rgba(0,0,0,0.22);min-width:200px;display:none;align-items:center;justify-content:center;gap:10px;}
+.nav-btn:active{transform:translateY(5px);box-shadow:0 2px 0 rgba(0,0,0,0.22);}
+.nav-btn.show{display:flex;}
+.btn-next{background:linear-gradient(180deg,#66BB6A,#4CAF50);}
+.btn-prev{background:linear-gradient(180deg,#FFB74D,#FF9800);}
+.btn-retry{background:linear-gradient(180deg,#42A5F5,#2196F3);}
+
+/* END SCREEN */
+#endScreen{display:none;width:100%;max-width:1200px;min-height:95vh;background:linear-gradient(180deg,#FFF8E7,#FFF3CD);border-radius:40px;padding:30px;box-shadow:0 15px 40px rgba(0,0,0,0.12);flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.end-title{font-size:54px;font-weight:900;margin-bottom:15px;color:#5D3A1A;}
+.end-stars{font-size:100px;margin-bottom:15px;letter-spacing:10px;animation:starSpin 3s ease-in-out infinite;}
+@keyframes starSpin{0%,100%{transform:scale(1) rotate(0);}50%{transform:scale(1.15) rotate(8deg);}}
+.end-score{font-size:42px;font-weight:900;color:#8B4513;margin-bottom:15px;background:#FFD700;padding:18px 45px;border-radius:35px;border:5px solid #FFA500;}
+.end-motivation{font-size:48px;font-weight:900;margin-bottom:28px;animation:pulseBtn 1.5s ease-in-out infinite;}
+.moral-summary{background:linear-gradient(135deg,#FFF9C4,#FFF3CD);border:5px solid #FF9800;border-radius:30px;padding:25px 40px;max-width:900px;width:100%;margin-bottom:28px;}
+.moral-summary h3{font-size:32px;color:#E65100;margin-bottom:15px;}
+.moral-summary ul{list-style:none;text-align:left;font-size:26px;line-height:2;color:#4A3520;font-weight:600;}
+.moral-summary ul li::before{content:'🌟 ';}
+.end-buttons{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.end-btn{font-size:36px;font-weight:900;padding:24px 55px;border:none;border-radius:80px;cursor:pointer;transition:all 0.15s;box-shadow:0 9px 0 rgba(0,0,0,0.22);color:white;}
+.end-btn:active{transform:translateY(6px);box-shadow:0 3px 0 rgba(0,0,0,0.22);}
+.btn-restart{background:linear-gradient(180deg,#FFB74D,#FF9800);}
+.btn-home{background:linear-gradient(180deg,#42A5F5,#2196F3);}
+
+/* RESPONSIVE */
+@media (max-width:900px){
+.dashboard-title{font-size:40px;}.dashboard-sub{font-size:24px;}.dashboard-sub2{font-size:20px;}
+.bunny-mascot{font-size:130px;}.btn-start{font-size:30px;padding:22px 45px;}
+.scene-title{font-size:30px;}.story-text{font-size:22px;}
+.choice-btn{min-height:170px;min-width:220px;}.choice-emoji{font-size:65px;}.choice-label{font-size:22px;}
+.nav-btn{font-size:24px;padding:16px 32px;min-width:150px;}
+.end-title{font-size:38px;}.end-score{font-size:30px;}.end-motivation{font-size:34px;}
+.moral-summary ul{font-size:22px;}.end-btn{font-size:26px;padding:18px 38px;}
+.progress-dot{width:44px;height:44px;font-size:18px;}.sound-btn{width:55px;height:55px;font-size:24px;}
+.feedback-title{font-size:28px;}.feedback-text{font-size:22px;}.moral-text{font-size:24px;}
+.moral-label{font-size:20px;}.narator-label{font-size:16px;}
+}
+@media (max-width:600px){
+#app{padding:8px;}
+.dashboard-title{font-size:28px;text-shadow:2px 2px 0 #FFD700;}.dashboard-sub{font-size:17px;}.dashboard-sub2{font-size:14px;padding:5px 15px;}
+.bunny-mascot{font-size:100px;}.btn-start{font-size:22px;padding:16px 30px;}
+.scene-title{font-size:22px;}.story-card{padding:14px 18px;gap:12px;flex-direction:column;text-align:center;}
+.speaker-icon{font-size:55px;}.story-text{font-size:18px;}
+.choice-btn{min-height:140px;min-width:100%;}.choice-emoji{font-size:55px;}.choice-label{font-size:18px;}
+.nav-btn{font-size:18px;padding:12px 22px;min-width:120px;}
+.progress-dot{width:38px;height:38px;font-size:15px;}.sound-btn{width:50px;height:50px;font-size:22px;}
+.feedback-emoji{font-size:65px;}.feedback-title{font-size:22px;}.feedback-text{font-size:18px;}
+.moral-text{font-size:20px;}.end-stars{font-size:70px;}.end-btn{font-size:22px;padding:15px 28px;}
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="cloud cloud1"></div>
+  <div class="cloud cloud2"></div>
+  <div class="cloud cloud3"></div>
+  <div class="sun">☀️</div>
+  <div class="rainbow">🌈</div>
+  <div class="butterfly bf1">🦋</div>
+  <div class="butterfly bf2">🦋</div>
+  <div class="butterfly bf3">🦋</div>
+  <div class="bunny-mascot" id="bunnyMascot">🐰</div>
+  <div class="dashboard-title">🐰 PETUALANGAN EMOSI 🐰</div>
+  <div class="dashboard-sub">Kelinci Kecil & Teman-Temannya</div>
+  <div class="dashboard-sub2">Game TK Al Azhar 21</div>
+  <button class="btn-start" id="btnStart" type="button">▶️ MULAI PETUALANGAN</button>
+  <div class="grass"></div>
+  <div class="flowers">
+    <span>🌻</span><span>🌷</span><span>🌻</span><span>🌷</span><span>🌻</span>
+  </div>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="gameScreen">
+  <div class="top-bar">
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="sound-controls">
+      <button class="sound-btn" id="btnMute" type="button" title="Matikan/nyalakan suara">🔊</button>
+      <button class="sound-btn" id="btnReplay" type="button" title="Ulangi narasi">🔁</button>
+    </div>
+  </div>
+  <div class="scene-title" id="sceneTitle"></div>
+  <div class="story-card" id="storyCard">
+    <div class="speaker-icon" id="speakerIcon">🔊</div>
+    <div class="story-text">
+      <div class="narator-label">🎙️ NARATOR</div>
+      <div id="storyText"></div>
+    </div>
+  </div>
+  <div class="choices" id="choicesContainer"></div>
+  <div class="feedback-box" id="feedbackBox">
+    <div class="feedback-emoji" id="feedbackEmoji"></div>
+    <div class="feedback-title" id="feedbackTitle"></div>
+    <div class="feedback-text" id="feedbackText"></div>
+  </div>
+  <div class="moral-box" id="moralBox">
+    <div class="moral-label">💛 PESAN MORAL 💛</div>
+    <div class="moral-text" id="moralText"></div>
+  </div>
+  <div class="nav-buttons">
+    <button class="nav-btn btn-prev" id="btnPrev" type="button">⏮️ KEMBALI</button>
+    <button class="nav-btn btn-retry" id="btnRetry" type="button">🔁 ULANGI</button>
+    <button class="nav-btn btn-next" id="btnNext" type="button">⏭️ LANJUT</button>
+  </div>
+</div>
+
+<!-- END SCREEN -->
+<div id="endScreen">
+  <div class="end-title">🎉 PETUALANGAN SELESAI! 🎉</div>
+  <div class="end-stars" id="endStars">⭐⭐⭐⭐⭐</div>
+  <div class="end-score" id="endScore"></div>
+  <div class="end-motivation" id="endMotivation"></div>
+  <div class="moral-summary">
+    <h3>🌟 RINGKASAN PESAN MORAL 🌟</h3>
+    <ul>
+      <li>Hiburlah teman yang sedih</li>
+      <li>Terimalah teman tanpa melihat kelemahannya</li>
+      <li>Selesaikan marah dengan cara baik</li>
+      <li>Sapa teman baru dengan ramah</li>
+      <li>Berbagi menambah kebahagiaan</li>
+    </ul>
+  </div>
+  <div class="end-buttons">
+    <button class="end-btn btn-restart" id="btnRestart" type="button">🔄 MAIN LAGI</button>
+    <button class="end-btn btn-home" id="btnHome" type="button">🏠 KEMBALI KE DASHBOARD</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+// ============================================================
+// AUDIO ENGINE
+// ============================================================
+var audioCtx = null;
+var muted = false;
+
+function getAudioContext(){
+  try{
+    if(!audioCtx){
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }catch(e){ return null; }
+}
+
+function playTone(freq, duration, volume, type, delay){
+  if(muted) return;
+  var ctx = getAudioContext();
+  if(!ctx) return;
+  var osc = ctx.createOscillator();
+  var gain = ctx.createGain();
+  osc.type = type || 'sine';
+  osc.frequency.value = freq;
+  var t = ctx.currentTime + (delay || 0);
+  gain.gain.setValueAtTime(0, t);
+  gain.gain.linearRampToValueAtTime(volume, t + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(t);
+  osc.stop(t + duration + 0.05);
+}
+
+var NOTE = { C4:261.63, E4:329.63, G4:392.00, C5:523.25, E5:659.25, G5:783.99, C6:1046.50 };
+
+function playClickSound(){ playTone(1200, 0.05, 0.3, 'square', 0); }
+function playCorrectSound(){ [NOTE.C4,NOTE.E4,NOTE.G4,NOTE.C5].forEach(function(f,i){ playTone(f,0.5,0.7,'sine',i*0.13); }); }
+function playWrongSound(){ playTone(NOTE.E4,0.3,0.5,'sine',0); playTone(NOTE.C4,0.35,0.5,'sine',0.18); }
+function playMoralSound(){ [NOTE.C4,NOTE.E4,NOTE.G4].forEach(function(f,i){ playTone(f,0.6,0.4,'sine',i*0.18); }); }
+function playFanfare(){ [NOTE.C4,NOTE.E4,NOTE.G4,NOTE.C5,NOTE.E5,NOTE.G5,NOTE.C6].forEach(function(f,i){ playTone(f,0.35,0.7,'triangle',i*0.12); }); }
+
+// Backsound dashboard
+var musicTimer = null;
+var musicOn = false;
+
+function startDashboardMusic(){
+  if(musicOn || muted) return;
+  musicOn = true;
+  var melody = [NOTE.C4,NOTE.E4,NOTE.G4,NOTE.E4,NOTE.C4,NOTE.E4,NOTE.G4,NOTE.E4];
+  var dur = 0.45;
+  var total = melody.length * dur;
+  function loop(){
+    if(!musicOn || muted) return;
+    var ctx = getAudioContext();
+    if(!ctx) return;
+    var start = ctx.currentTime;
+    melody.forEach(function(freq, i){
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      var t = start + i * dur;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.15, t + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + dur * 0.9);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + dur);
+    });
+    musicTimer = setTimeout(loop, total * 1000);
+  }
+  loop();
+}
+
+function stopDashboardMusic(){
+  musicOn = false;
+  if(musicTimer){ clearTimeout(musicTimer); musicTimer = null; }
+}
+
+// Speech
+function speak(text, rate, pitch, onEnd){
+  if(muted){ if(onEnd) onEnd(); return; }
+  if(!('speechSynthesis' in window)){ if(onEnd) onEnd(); return; }
+  window.speechSynthesis.cancel();
+  var u = new SpeechSynthesisUtterance(text);
+  u.lang = 'id-ID';
+  u.rate = rate || 0.9;
+  u.pitch = pitch || 1.0;
+  u.volume = 1.0;
+  if(onEnd) u.onend = onEnd;
+  window.speechSynthesis.speak(u);
+}
+function stopSpeaking(){
+  if('speechSynthesis' in window) window.speechSynthesis.cancel();
+}
+
+// ============================================================
+// DATA ADEGAN
+// ============================================================
+var scenes = [
+  {
+    title: 'Adegan 1: Wortel yang Hilang',
+    narration: 'Kelinci Kecil sedang sedih. Wortel kesukaannya hilang. Teman-temannya melihat Kelinci Kecil menangis.',
+    choices: [
+      { emoji:'🤗', label:'HIBUR', correct:true, letter:'A' },
+      { emoji:'😂', label:'TERTAWA', correct:false, letter:'B' },
+      { emoji:'🤐', label:'DIAM', correct:false, letter:'C' }
+    ],
+    correctResponse: 'Kamu baik sekali! Menghibur teman yang sedih membuatnya merasa dicintai. Kelinci Kecil tersenyum lagi!',
+    wrongResponses: {
+      B: 'Menertawakan teman yang sedih membuatnya semakin sedih. Itu tidak baik.',
+      C: 'Diam saja membuat teman merasa tidak diperhatikan. Lebih baik menghiburnya.'
+    },
+    moral: 'Ketika teman sedih, hiburlah dengan kasih sayang.'
+  },
+  {
+    title: 'Adegan 2: Kura-kura Terlambat',
+    narration: 'Kura-kura datang terlambat ke pesta. Ia merasa malu dan takut ditertawakan.',
+    choices: [
+      { emoji:'🤝', label:'SAMBUT', correct:true, letter:'A' },
+      { emoji:'👉', label:'USIR', correct:false, letter:'B' },
+      { emoji:'🙈', label:'ABAIKAN', correct:false, letter:'C' }
+    ],
+    correctResponse: 'Hebat! Menyambut teman dengan hangat membuatnya merasa diterima. Kura-kura senang sekali!',
+    wrongResponses: {
+      B: 'Menyuruh teman pulang membuatnya sedih dan merasa tidak diterima.',
+      C: 'Mengabaikan teman membuatnya merasa tidak dihargai. Sapa dan sambutlah!'
+    },
+    moral: 'Terimalah teman tanpa melihat kelemahannya.'
+  },
+  {
+    title: 'Adegan 3: Kelinci Kecil Marah',
+    narration: 'Mainan Kelinci Kecil diambil tanpa izin. Ia sangat marah dan ingin membalas.',
+    choices: [
+      { emoji:'🗣️', label:'BICARA', correct:true, letter:'A' },
+      { emoji:'😡', label:'BALAS', correct:false, letter:'B' },
+      { emoji:'😭', label:'MENANGIS', correct:false, letter:'C' }
+    ],
+    correctResponse: 'Pintar! Bicara baik-baik menyelesaikan masalah tanpa menyakiti siapa pun. Kelinci Kecil dan temannya berdamai!',
+    wrongResponses: {
+      B: 'Membalas dengan marah hanya membuat masalah semakin besar.',
+      C: 'Menangis dan mengurung diri tidak menyelesaikan masalah. Ayo bicara baik-baik!'
+    },
+    moral: 'Marah itu wajar, tapi selesaikan dengan cara baik.'
+  },
+  {
+    title: 'Adegan 4: Teman Baru di Kelas',
+    narration: 'Ada anak baru di kelas. Ia duduk sendiri dan terlihat takut. Tidak ada yang menyapanya.',
+    choices: [
+      { emoji:'👋', label:'SAPA', correct:true, letter:'A' },
+      { emoji:'🚶', label:'BIARKAN', correct:false, letter:'B' },
+      { emoji:'😜', label:'TERTAWAKAN', correct:false, letter:'C' }
+    ],
+    correctResponse: 'Luar biasa! Menyapa teman baru membuatnya merasa diterima. Sekarang mereka bermain bersama!',
+    wrongResponses: {
+      B: 'Membiarkan teman baru sendirian membuatnya merasa tidak diterima.',
+      C: 'Menertawakan teman baru sangat menyakitkan hatinya. Jangan lakukan itu!'
+    },
+    moral: 'Satu sapaan bisa mengubah hari seseorang.'
+  },
+  {
+    title: 'Adegan 5: Berbagi Kebahagiaan',
+    narration: 'Kelinci Kecil mendapat banyak wortel. Temannya tidak mendapat apa-apa. Apa yang harus dilakukan?',
+    choices: [
+      { emoji:'🤲', label:'BERBAGI', correct:true, letter:'A' },
+      { emoji:'🙅', label:'SIMPAN', correct:false, letter:'B' },
+      { emoji:'😋', label:'MAKAN SENDIRI', correct:false, letter:'C' }
+    ],
+    correctResponse: 'Kamu hebat! Berbagi membuat kebahagiaan bertambah. Semua teman makan bersama dengan gembira!',
+    wrongResponses: {
+      B: 'Menyimpan semua untuk diri sendiri membuat teman sedih. Berbagi itu indah!',
+      C: 'Makan di depan teman tanpa berbagi membuatnya sedih. Ayo berbagi!'
+    },
+    moral: 'Berbagi tidak mengurangi kebahagiaan, justru menambahnya.'
+  }
+];
+
+// ============================================================
+// STATE
+// ============================================================
+var currentScene = 0;
+var score = 0;
+var answeredCorrectly = [false,false,false,false,false];
+var sceneAnswered = [false,false,false,false,false];
+var selectedChoiceIndex = [-1,-1,-1,-1,-1];
+
+// ============================================================
+// DOM
+// ============================================================
+var dashboard = document.getElementById('dashboard');
+var gameScreen = document.getElementById('gameScreen');
+var endScreen = document.getElementById('endScreen');
+var btnStart = document.getElementById('btnStart');
+var progressBar = document.getElementById('progressBar');
+var sceneTitle = document.getElementById('sceneTitle');
+var storyText = document.getElementById('storyText');
+var storyCard = document.getElementById('storyCard');
+var speakerIcon = document.getElementById('speakerIcon');
+var choicesContainer = document.getElementById('choicesContainer');
+var feedbackBox = document.getElementById('feedbackBox');
+var feedbackEmoji = document.getElementById('feedbackEmoji');
+var feedbackTitle = document.getElementById('feedbackTitle');
+var feedbackText = document.getElementById('feedbackText');
+var moralBox = document.getElementById('moralBox');
+var moralText = document.getElementById('moralText');
+var btnPrev = document.getElementById('btnPrev');
+var btnRetry = document.getElementById('btnRetry');
+var btnNext = document.getElementById('btnNext');
+var btnMute = document.getElementById('btnMute');
+var btnReplay = document.getElementById('btnReplay');
+var endStars = document.getElementById('endStars');
+var endScore = document.getElementById('endScore');
+var endMotivation = document.getElementById('endMotivation');
+var btnRestart = document.getElementById('btnRestart');
+var btnHome = document.getElementById('btnHome');
+
+// ============================================================
+// FUNGSI
+// ============================================================
+function showScreen(screen){
+  dashboard.style.display = 'none';
+  gameScreen.style.display = 'none';
+  endScreen.style.display = 'none';
+  screen.style.display = 'flex';
+}
+
+function updateProgressBar(){
+  progressBar.innerHTML = '';
+  for(var i=0; i<5; i++){
+    var dot = document.createElement('div');
+    dot.className = 'progress-dot';
+    if(i === currentScene) dot.classList.add('active');
+    if(answeredCorrectly[i]) dot.classList.add('done');
+    dot.textContent = answeredCorrectly[i] ? '✓' : (i+1);
+    progressBar.appendChild(dot);
+  }
+}
+
+function narrateCurrentScene(){
+  var scene = scenes[currentScene];
+  storyCard.classList.add('speaking');
+  speakerIcon.textContent = '🔊';
+  speakerIcon.classList.remove('silent');
+  speak(scene.narration, 0.85, 1.0, function(){
+    storyCard.classList.remove('speaking');
+    speakerIcon.textContent = '🔈';
+  });
+}
+
+function renderScene(){
+  var scene = scenes[currentScene];
+  sceneTitle.textContent = scene.title;
+  storyText.textContent = scene.narration;
+  updateProgressBar();
+
+  feedbackBox.className = 'feedback-box';
+  moralBox.classList.remove('show');
+
+  choicesContainer.innerHTML = '';
+  scene.choices.forEach(function(choice, index){
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'choice-btn ' + choice.letter.toLowerCase();
+    btn.innerHTML = '<div class="choice-sound-badge">🔊</div>' +
+                    '<div class="choice-emoji">' + choice.emoji + '</div>' +
+                    '<div class="choice-label">' + choice.label + '</div>';
+    btn.addEventListener('click', function(){ handleChoice(index); });
+    choicesContainer.appendChild(btn);
+  });
+
+  btnPrev.classList.remove('show');
+  btnRetry.classList.remove('show');
+  btnNext.classList.remove('show');
+
+  if(sceneAnswered[currentScene]){
+    restoreAnsweredState();
+  } else {
+    setTimeout(narrateCurrentScene, 400);
+  }
+}
+
+function restoreAnsweredState(){
+  var scene = scenes[currentScene];
+  var btns = choicesContainer.querySelectorAll('.choice-btn');
+  var chosenIdx = selectedChoiceIndex[currentScene];
+
+  btns.forEach(function(btn, idx){
+    btn.classList.add('disabled');
+    if(scene.choices[idx].correct) btn.classList.add('correct');
+    if(idx === chosenIdx && !scene.choices[idx].correct) btn.classList.add('wrong');
+  });
+
+  if(answeredCorrectly[currentScene]){
+    showCorrectFeedback();
+  } else {
+    showWrongFeedback(chosenIdx);
+  }
+  showNavButtons();
+}
+
+function showCorrectFeedback(){
+  var scene = scenes[currentScene];
+  feedbackBox.className = 'feedback-box correct-fb show';
+  feedbackEmoji.textContent = '🎉';
+  feedbackTitle.className = 'feedback-title correct-ft';
+  feedbackTitle.textContent = 'SELAMAT! PILIHAN YANG TEPAT!';
+  feedbackText.textContent = scene.correctResponse;
+  moralBox.classList.add('show');
+  moralText.textContent = scene.moral;
+}
+
+function showWrongFeedback(chosenIdx){
+  var scene = scenes[currentScene];
+  var letter = scene.choices[chosenIdx] ? scene.choices[chosenIdx].letter : 'B';
+  feedbackBox.className = 'feedback-box wrong-fb show';
+  feedbackEmoji.textContent = '🤔';
+  feedbackTitle.className = 'feedback-title wrong-ft';
+  feedbackTitle.textContent = 'COBA PIKIRKAN LAGI YA!';
+  feedbackText.textContent = scene.wrongResponses[letter] || 'Pilihan itu kurang tepat. Ayo coba lagi!';
+}
+
+function showNavButtons(){
+  btnRetry.classList.add('show');
+  if(currentScene > 0) btnPrev.classList.add('show');
+  btnNext.classList.add('show');
+  if(currentScene === 4){
+    btnNext.textContent = '🏁 SELESAI';
+  } else {
+    btnNext.textContent = '⏭️ LANJUT';
+  }
+}
+
+function handleChoice(index){
+  if(sceneAnswered[currentScene]) return;
+  playClickSound();
+
+  var scene = scenes[currentScene];
+  var isCorrect = scene.choices[index].correct;
+
+  sceneAnswered[currentScene] = true;
+  selectedChoiceIndex[currentScene] = index;
+
+  if(isCorrect){
+    score++;
+    answeredCorrectly[currentScene] = true;
+  }
+
+  var btns = choicesContainer.querySelectorAll('.choice-btn');
+  btns.forEach(function(btn, idx){
+    btn.classList.add('disabled');
+    if(scene.choices[idx].correct) btn.classList.add('correct');
+    if(idx === index && !isCorrect) btn.classList.add('wrong');
+  });
+
+  updateProgressBar();
+
+  if(isCorrect){
+    playCorrectSound();
+    showCorrectFeedback();
+    speak('Selamat! Kamu baik sekali!', 0.9, 1.2, function(){
+      setTimeout(function(){
+        playMoralSound();
+        speak(scene.moral, 0.85, 1.1);
+      }, 400);
+    });
+  } else {
+    playWrongSound();
+    showWrongFeedback(index);
+    speak('Coba pikirkan lagi ya!', 0.9, 1.0, function(){
+      setTimeout(function(){
+        speak(feedbackText.textContent, 0.85, 1.0);
+      }, 300);
+    });
+  }
+
+  showNavButtons();
+}
+
+// ============================================================
+// NAVIGASI
+// ============================================================
+btnNext.addEventListener('click', function(){
+  playClickSound();
+  stopSpeaking();
+  if(currentScene < 4){
+    currentScene++;
+    renderScene();
+  } else {
+    showEndScreen();
+  }
+});
+
+btnPrev.addEventListener('click', function(){
+  playClickSound();
+  stopSpeaking();
+  if(currentScene > 0){
+    currentScene--;
+    renderScene();
+  }
+});
+
+btnRetry.addEventListener('click', function(){
+  playClickSound();
+  stopSpeaking();
+  if(sceneAnswered[currentScene]){
+    if(answeredCorrectly[currentScene]){
+      score--;
+      answeredCorrectly[currentScene] = false;
+    }
+    sceneAnswered[currentScene] = false;
+    selectedChoiceIndex[currentScene] = -1;
+  }
+  renderScene();
+});
+
+// ============================================================
+// END SCREEN
+// ============================================================
+function showEndScreen(){
+  gameScreen.style.display = 'none';
+  endScreen.style.display = 'flex';
+
+  endScore.textContent = 'Kamu menjawab benar ' + score + ' dari 5';
+
+  var stars = '';
+  for(var i=0; i<5; i++){
+    stars += i < score ? '⭐' : '☆';
+  }
+  endStars.textContent = stars;
+
+  var motivation = '', speakText = '', pitch = 1.0;
+
+  if(score === 5){
+    motivation = '🏆 LUAR BIASA! Kamu Juara! 🏆';
+    speakText = 'Luar biasa! Kamu juara!';
+    playFanfare();
+    pitch = 1.3;
+  } else if(score === 4){
+    motivation = '⭐ HEBAT! Kamu Pintar! ⭐';
+    speakText = 'Hebat! Kamu pintar!';
+    [NOTE.C4,NOTE.E4,NOTE.G4,NOTE.C5].forEach(function(f,i){ playTone(f,0.4,0.6,'triangle',i*0.15); });
+    pitch = 1.2;
+  } else if(score === 3){
+    motivation = '👍 BAGUS! Ayo Coba Lagi! 👍';
+    speakText = 'Bagus! Ayo coba lagi!';
+    [NOTE.C4,NOTE.E4,NOTE.G4].forEach(function(f,i){ playTone(f,0.4,0.5,'sine',i*0.18); });
+    pitch = 1.1;
+  } else {
+    motivation = '💪 SEMANGAT! Kamu Bisa! 💪';
+    speakText = 'Semangat! Kamu bisa!';
+    [NOTE.C4,NOTE.C4,NOTE.G4,NOTE.G4].forEach(function(f,i){ playTone(f,0.4,0.5,'sine',i*0.2); });
+  }
+
+  endMotivation.textContent = motivation;
+
+  setTimeout(function(){ speak(speakText, 0.9, pitch); }, 1000);
+}
+
+// ============================================================
+// RESET & HOME
+// ============================================================
+function resetGame(){
+  currentScene = 0;
+  score = 0;
+  answeredCorrectly = [false,false,false,false,false];
+  sceneAnswered = [false,false,false,false,false];
+  selectedChoiceIndex = [-1,-1,-1,-1,-1];
+  stopSpeaking();
+}
+
+btnRestart.addEventListener('click', function(){
+  playClickSound();
+  resetGame();
+  showScreen(gameScreen);
+  renderScene();
+});
+
+btnHome.addEventListener('click', function(){
+  playClickSound();
+  resetGame();
+  showScreen(dashboard);
+  startDashboardMusic();
+});
+
+// ============================================================
+// MUTE & REPLAY
+// ============================================================
+btnMute.addEventListener('click', function(){
+  muted = !muted;
+  btnMute.textContent = muted ? '🔇' : '🔊';
+  if(muted){
+    btnMute.classList.add('muted');
+    stopSpeaking();
+    stopDashboardMusic();
+  } else {
+    btnMute.classList.remove('muted');
+    if(dashboard.style.display !== 'none') startDashboardMusic();
+  }
+  playClickSound();
+});
+
+btnReplay.addEventListener('click', function(){
+  playClickSound();
+  stopSpeaking();
+  if(dashboard.style.display === 'none'){
+    setTimeout(narrateCurrentScene, 200);
+  }
+});
+
+// ============================================================
+// START GAME
+// ============================================================
+btnStart.addEventListener('click', function(){
+  getAudioContext();
+  playClickSound();
+  stopDashboardMusic();
+  stopSpeaking();
+  resetGame();
+  showScreen(gameScreen);
+  renderScene();
+});
+
+// Kelinci mascot diklik → suara
+document.getElementById('bunnyMascot').addEventListener('click', function(){
+  getAudioContext();
+  playClickSound();
+  speak('Halo teman! Ayo bermain bersama!', 0.9, 1.3);
+});
+
+// Auto-start backsound pada interaksi pertama
+var firstTouch = false;
+function unlockAudioOnce(){
+  if(firstTouch) return;
+  firstTouch = true;
+  getAudioContext();
+  if(dashboard.style.display !== 'none' && !muted){
+    startDashboardMusic();
+  }
+}
+document.addEventListener('click', unlockAudioOnce, { once:false });
+document.addEventListener('touchstart', unlockAudioOnce, { once:false });
+
+// ============================================================
+// INIT
+// ============================================================
+showScreen(dashboard);
+
+// Cegah scroll berlebih pada layar sentuh
+document.body.addEventListener('touchmove', function(e){
+  if(e.target.closest('#gameScreen') || e.target.closest('#endScreen')) return;
+  e.preventDefault();
+}, { passive: false });
+</script>
+</body>
+</html>

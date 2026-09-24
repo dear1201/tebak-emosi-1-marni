@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>🐰 Petualangan Emosi Kelinci Kecil 🐰</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #FFF8E7;
+            overflow-x: hidden;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 1400px;
+            min-height: 100vh;
+            position: relative;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ========== DASHBOARD ========== */
+        #dashboard {
+            position: relative;
+            width: 100%;
+            min-height: 95vh;
+            border-radius: 40px;
+            background: linear-gradient(180deg, #87CEEB 0%, #B0E0FF 30%, #FFE4A0 70%, #90EE90 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            padding: 30px 20px;
+        }
+
+        .cloud {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.85;
+            pointer-events: none;
+        }
+
+        .cloud::before, .cloud::after {
+            content: '';
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .cloud1 {
+            width: 100px; height: 50px;
+            top: 8%; left: -120px;
+            animation: cloudMove 25s linear infinite;
+        }
+        .cloud1::before { width: 60px; height: 60px; top: -25px; left: 15px; }
+        .cloud1::after { width: 50px; height: 50px; top: -18px; left: 50px; }
+
+        .cloud2 {
+            width: 130px; height: 60px;
+            top: 18%; left: -150px;
+            animation: cloudMove 35s linear infinite 8s;
+        }
+        .cloud2::before { width: 70px; height: 70px; top: -30px; left: 20px; }
+        .cloud2::after { width: 55px; height: 55px; top: -22px; left: 65px; }
+
+        .cloud3 {
+            width: 80px; height: 40px;
+            top: 5%; left: -100px;
+            animation: cloudMove 20s linear infinite 15s;
+        }
+        .cloud3::before { width: 50px; height: 50px; top: -22px; left: 10px; }
+        .cloud3::after { width: 40px; height: 40px; top: -15px; left: 42px; }
+
+        @keyframes cloudMove {
+            0% { left: -200px; }
+            100% { left: 110%; }
+        }
+
+        .sun {
+            position: absolute;
+            top: 5%;
+            right: 8%;
+            font-size: 80px;
+            animation: sunPulse 3s ease-in-out infinite;
+            pointer-events: none;
+            filter: drop-shadow(0 0 25px rgba(255,215,0,0.8));
+        }
+        @keyframes sunPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.12); }
+        }
+
+        .rainbow {
+            position: absolute;
+            top: 12%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 100px;
+            opacity: 0.55;
+            pointer-events: none;
+            letter-spacing: -15px;
+        }
+
+        .grass {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(180deg, transparent, #7CCD7C 30%, #5cb85c 100%);
+            border-radius: 0 0 40px 40px;
+            pointer-events: none;
+        }
+
+        .flowers {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            padding: 0 40px;
+            font-size: 50px;
+            pointer-events: none;
+        }
+        .flowers span {
+            animation: sway 3s ease-in-out infinite;
+            display: inline-block;
+        }
+        .flowers span:nth-child(2) { animation-delay: 0.6s; }
+        .flowers span:nth-child(3) { animation-delay: 1.2s; }
+        .flowers span:nth-child(4) { animation-delay: 0.3s; }
+        .flowers span:nth-child(5) { animation-delay: 0.9s; }
+
+        @keyframes sway {
+            0%, 100% { transform: rotate(-5deg) translateY(0); }
+            50% { transform: rotate(5deg) translateY(-8px); }
+        }
+
+        .butterfly {
+            position: absolute;
+            font-size: 40px;
+            pointer-events: none;
+        }
+        .bf1 { top: 25%; left: 10%; animation: fly1 8s ease-in-out infinite; }
+        .bf2 { top: 35%; right: 12%; animation: fly2 10s ease-in-out infinite 2s; }
+        .bf3 { top: 55%; left: 20%; animation: fly3 9s ease-in-out infinite 4s; }
+
+        @keyframes fly1 {
+            0%, 100% { transform: translate(0,0) rotate(0deg); }
+            25% { transform: translate(60px,-40px) rotate(15deg); }
+            50% { transform: translate(120px,-10px) rotate(-10deg); }
+            75% { transform: translate(50px,30px) rotate(10deg); }
+        }
+        @keyframes fly2 {
+            0%, 100% { transform: translate(0,0) rotate(0deg); }
+            25% { transform: translate(-50px,-50px) rotate(-12deg); }
+            50% { transform: translate(-100px,10px) rotate(8deg); }
+            75% { transform: translate(-40px,40px) rotate(-8deg); }
+        }
+        @keyframes fly3 {
+            0%, 100% { transform: translate(0,0) rotate(0deg); }
+            33% { transform: translate(70px,-30px) rotate(12deg); }
+            66% { transform: translate(-40px,-50px) rotate(-15deg); }
+        }
+
+        .bunny-mascot {
+            font-size: 170px;
+            animation: bunnySway 2.5s ease-in-out infinite;
+            z-index: 5;
+            position: relative;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15));
+            margin-bottom: 10px;
+        }
+        @keyframes bunnySway {
+            0%, 100% { transform: rotate(-6deg) translateY(0); }
+            50% { transform: rotate(6deg) translateY(-15px); }
+        }
+
+        .dashboard-title {
+            font-size: 58px;
+            font-weight: 900;
+            color: #8B4513;
+            text-shadow: 4px 4px 0 #FFD700, 6px 6px 10px rgba(0,0,0,0.2);
+            z-index: 5;
+            text-align: center;
+            line-height: 1.2;
+            margin-bottom: 5px;
+        }
+
+        .dashboard-sub {
+            font-size: 32px;
+            color: #5D3A1A;
+            font-weight: 700;
+            z-index: 5;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
+            margin-bottom: 4px;
+        }
+
+        .dashboard-sub2 {
+            font-size: 26px;
+            color: #7B5B3A;
+            font-weight: 600;
+            z-index: 5;
+            background: rgba(255,255,255,0.7);
+            padding: 6px 24px;
+            border-radius: 30px;
+            margin-bottom: 25px;
+        }
+
+        .btn-start {
+            font-size: 42px;
+            font-weight: 900;
+            padding: 28px 65px;
+            border: none;
+            border-radius: 80px;
+            background: linear-gradient(180deg, #FFE066, #FFD700, #FFC107);
+            color: #8B4513;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 10px 0 #E6A800, 0 15px 30px rgba(0,0,0,0.25);
+            transition: all 0.15s;
+            animation: pulseBtn 1.8s ease-in-out infinite;
+            letter-spacing: 2px;
+            position: relative;
+        }
+        .btn-start:active {
+            transform: translateY(6px);
+            box-shadow: 0 4px 0 #E6A800, 0 8px 15px rgba(0,0,0,0.2);
+        }
+        @keyframes pulseBtn {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.06); }
+        }
+
+        /* ========== GAME SCREEN ========== */
+        #gameScreen {
+            display: none;
+            width: 100%;
+            max-width: 1300px;
+            min-height: 95vh;
+            background: #FFF8E7;
+            border-radius: 40px;
+            padding: 25px 30px 30px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .progress-bar {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 15px;
+        }
+        .progress-dot {
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 900;
+            background: #E0E0E0;
+            color: #999;
+            transition: all 0.3s;
+            border: 3px solid #ccc;
+        }
+        .progress-dot.active {
+            background: #FFD700;
+            color: #8B4513;
+            border-color: #FFA500;
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(255,215,0,0.6);
+        }
+        .progress-dot.done {
+            background: #4CAF50;
+            color: white;
+            border-color: #388E3C;
+        }
+
+        .scene-counter {
+            font-size: 28px;
+            font-weight: 700;
+            color: #8B4513;
+            background: #FFF3CD;
+            padding: 8px 30px;
+            border-radius: 30px;
+            border: 3px solid #FFD700;
+            margin-bottom: 15px;
+        }
+
+        .scene-title {
+            font-size: 40px;
+            font-weight: 900;
+            color: #5D3A1A;
+            text-align: center;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .scene-visual {
+            font-size: 90px;
+            text-align: center;
+            margin: 5px 0 10px;
+            letter-spacing: 10px;
+            animation: sceneBounce 2s ease-in-out infinite;
+        }
+        @keyframes sceneBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .story-box {
+            background: #FFFFFF;
+            border: 4px solid #FFD700;
+            border-radius: 25px;
+            padding: 22px 30px;
+            max-width: 900px;
+            width: 100%;
+            margin-bottom: 20px;
+            font-size: 30px;
+            line-height: 1.5;
+            color: #4A3520;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 20px;
+        }
+
+        .choice-btn {
+            font-size: 30px;
+            font-weight: 700;
+            padding: 22px 30px;
+            border: 4px solid rgba(0,0,0,0.1);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-height: 100px;
+            box-shadow: 0 6px 0 rgba(0,0,0,0.1);
+            color: #3A2A1A;
+        }
+        .choice-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.1);
+        }
+        .choice-btn.disabled {
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        .choice-btn.correct {
+            border-color: #4CAF50 !important;
+            box-shadow: 0 0 25px rgba(76,175,80,0.6);
+        }
+        .choice-btn.wrong {
+            border-color: #F44336 !important;
+            box-shadow: 0 0 25px rgba(244,67,54,0.5);
+        }
+
+        .choice-a { background: #B5EAD7; }
+        .choice-b { background: #A8D8EA; }
+        .choice-c { background: #FFE66D; }
+
+        .choice-letter {
+            width: 55px; height: 55px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 900;
+            flex-shrink: 0;
+            border: 3px solid rgba(0,0,0,0.15);
+        }
+
+        .feedback-box {
+            width: 100%;
+            max-width: 900px;
+            border-radius: 25px;
+            padding: 22px 30px;
+            margin-bottom: 15px;
+            display: none;
+            animation: fadeInUp 0.4s ease-out;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .feedback-box.show { display: block; }
+
+        .feedback-box.correct-fb {
+            background: #E8F5E9;
+            border: 4px solid #4CAF50;
+        }
+        .feedback-box.wrong-fb {
+            background: #FFF3E0;
+            border: 4px solid #FF9800;
+        }
+
+        .feedback-title {
+            font-size: 34px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .feedback-title.correct-ft { color: #2E7D32; }
+        .feedback-title.wrong-ft { color: #E65100; }
+
+        .feedback-text {
+            font-size: 26px;
+            line-height: 1.5;
+            color: #4A3520;
+            text-align: center;
+        }
+
+        .moral-box {
+            width: 100%;
+            max-width: 900px;
+            background: #FFF3CD;
+            border: 4px solid #FF9800;
+            border-radius: 25px;
+            padding: 20px 30px;
+            margin-bottom: 15px;
+            display: none;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        .moral-box.show { display: block; }
+
+        .moral-label {
+            font-size: 24px;
+            font-weight: 900;
+            color: #E65100;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .moral-text {
+            font-size: 30px;
+            font-weight: 700;
+            color: #5D3A1A;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            max-width: 900px;
+            margin-top: 5px;
+        }
+
+        .nav-btn {
+            font-size: 28px;
+            font-weight: 800;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.15s;
+            color: white;
+            box-shadow: 0 6px 0 rgba(0,0,0,0.2);
+            min-width: 180px;
+            display: none;
+        }
+        .nav-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+        }
+        .nav-btn.show { display: inline-block; }
+
+        .btn-next { background: #4CAF50; }
+        .btn-prev { background: #FF9800; }
+        .btn-retry { background: #2196F3; }
+
+        /* ========== END SCREEN ========== */
+        #endScreen {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+            min-height: 95vh;
+            background: linear-gradient(180deg, #FFF8E7, #FFF3CD);
+            border-radius: 40px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .end-title {
+            font-size: 56px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            color: #5D3A1A;
+        }
+
+        .end-score {
+            font-size: 44px;
+            font-weight: 800;
+            color: #8B4513;
+            margin-bottom: 15px;
+            background: #FFD700;
+            padding: 15px 40px;
+            border-radius: 30px;
+            border: 4px solid #FFA500;
+        }
+
+        .end-motivation {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 25px;
+            animation: pulseBtn 1.5s ease-in-out infinite;
+        }
+
+        .moral-summary {
+            background: #FFF3CD;
+            border: 4px solid #FF9800;
+            border-radius: 25px;
+            padding: 25px 35px;
+            max-width: 850px;
+            width: 100%;
+            margin-bottom: 25px;
+        }
+
+        .moral-summary h3 {
+            font-size: 30px;
+            color: #E65100;
+            margin-bottom: 15px;
+        }
+
+        .moral-summary ul {
+            list-style: none;
+            text-align: left;
+            font-size: 26px;
+            line-height: 2;
+            color: #4A3520;
+        }
+        .moral-summary ul li::before {
+            content: '🌟 ';
+        }
+
+        .end-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .end-btn {
+            font-size: 34px;
+            font-weight: 800;
+            padding: 22px 50px;
+            border: none;
+            border-radius: 70px;
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: 0 8px 0 rgba(0,0,0,0.2);
+        }
+        .end-btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 3px 0 rgba(0,0,0,0.2);
+        }
+
+        .btn-restart { background: #FF9800; color: white; }
+        .btn-home { background: #2196F3; color: white; }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 900px) {
+            .dashboard-title { font-size: 40px; }
+            .dashboard-sub { font-size: 24px; }
+            .bunny-mascot { font-size: 120px; }
+            .btn-start { font-size: 30px; padding: 22px 45px; }
+            .scene-title { font-size: 30px; }
+            .scene-visual { font-size: 65px; }
+            .story-box { font-size: 24px; padding: 18px 22px; }
+            .choice-btn { font-size: 24px; padding: 18px 22px; min-height: 80px; }
+            .nav-btn { font-size: 22px; padding: 14px 28px; min-width: 140px; }
+            .end-title { font-size: 40px; }
+            .end-score { font-size: 32px; }
+            .end-motivation { font-size: 36px; }
+            .moral-summary ul { font-size: 22px; }
+            .end-btn { font-size: 26px; padding: 18px 35px; }
+            .progress-dot { width: 40px; height: 40px; font-size: 18px; }
+            .feedback-title { font-size: 26px; }
+            .feedback-text { font-size: 22px; }
+            .moral-text { font-size: 24px; }
+            .scene-counter { font-size: 22px; }
+        }
+
+        @media (max-width: 600px) {
+            #app { padding: 10px; }
+            .dashboard-title { font-size: 30px; }
+            .dashboard-sub { font-size: 18px; }
+            .dashboard-sub2 { font-size: 16px; }
+            .bunny-mascot { font-size: 90px; }
+            .btn-start { font-size: 22px; padding: 18px 30px; }
+            .scene-title { font-size: 24px; }
+            .scene-visual { font-size: 50px; }
+            .story-box { font-size: 20px; }
+            .choice-btn { font-size: 20px; padding: 14px 16px; min-height: 65px; }
+            .choice-letter { width: 42px; height: 42px; font-size: 22px; }
+            .nav-btn { font-size: 18px; padding: 12px 20px; min-width: 110px; }
+            .progress-dot { width: 34px; height: 34px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+
+    <!-- ==================== DASHBOARD ==================== -->
+    <div id="dashboard">
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+        <div class="cloud cloud3"></div>
+        <div class="sun">☀️</div>
+        <div class="rainbow">🌈</div>
+
+        <div class="butterfly bf1">🦋</div>
+        <div class="butterfly bf2">🦋</div>
+        <div class="butterfly bf3">🦋</div>
+
+        <div class="bunny-mascot">🐰</div>
+
+        <div class="dashboard-title">🐰 PETUALANGAN EMOSI 🐰</div>
+        <div class="dashboard-sub">Kelinci Kecil & Teman-Temannya</div>
+        <div class="dashboard-sub2">Game TK Al Azhar 21</div>
+
+        <button class="btn-start" id="btnStart">▶️ MULAI PETUALANGAN</button>
+
+        <div class="grass"></div>
+        <div class="flowers">
+            <span>🌻</span>
+            <span>🌷</span>
+            <span>🌻</span>
+            <span>🌷</span>
+            <span>🌻</span>
+        </div>
+    </div>
+
+    <!-- ==================== GAME SCREEN ==================== -->
+    <div id="gameScreen">
+        <div class="progress-bar" id="progressBar"></div>
+        <div class="scene-counter" id="sceneCounter">Adegan 1 dari 5</div>
+        <div class="scene-title" id="sceneTitle"></div>
+        <div class="scene-visual" id="sceneVisual"></div>
+        <div class="story-box" id="storyBox"></div>
+
+        <div class="choices" id="choicesContainer"></div>
+
+        <div class="feedback-box" id="feedbackBox">
+            <div class="feedback-title" id="feedbackTitle"></div>
+            <div class="feedback-text" id="feedbackText"></div>
+        </div>
+
+        <div class="moral-box" id="moralBox">
+            <div class="moral-label">💛 PESAN MORAL 💛</div>
+            <div class="moral-text" id="moralText"></div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="nav-btn btn-prev" id="btnPrev">⏮️ KEMBALI</button>
+            <button class="nav-btn btn-retry" id="btnRetry">🔁 ULANGI</button>
+            <button class="nav-btn btn-next" id="btnNext">⏭️ LANJUT</button>
+        </div>
+    </div>
+
+    <!-- ==================== END SCREEN ==================== -->
+    <div id="endScreen">
+        <div class="end-title">🎉 PETUALANGAN SELESAI! 🎉</div>
+        <div class="end-score" id="endScore"></div>
+        <div class="end-motivation" id="endMotivation"></div>
+
+        <div class="moral-summary">
+            <h3>🌟 RINGKASAN PESAN MORAL 🌟</h3>
+            <ul>
+                <li>Hiburlah teman yang sedih</li>
+                <li>Terimalah teman tanpa melihat kelemahannya</li>
+                <li>Selesaikan marah dengan cara baik</li>
+                <li>Sapa teman baru dengan ramah</li>
+                <li>Berbagi menambah kebahagiaan</li>
+            </ul>
+        </div>
+
+        <div class="end-buttons">
+            <button class="end-btn btn-restart" id="btnRestart">🔄 MAIN LAGI</button>
+            <button class="end-btn btn-home" id="btnHome">🏠 KEMBALI KE DASHBOARD</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// ============================================================
+// AUDIO ENGINE (Web Audio API)
+// ============================================================
+let audioCtx = null;
+
+function getAudioContext() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+    return audioCtx;
+}
+
+function playTone(freq, duration, volume, type = 'sine', delay = 0) {
+    const ctx = getAudioContext();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0, ctx.currentTime + delay);
+    gain.gain.linearRampToValueAtTime(volume, ctx.currentTime + delay + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(ctx.currentTime + delay);
+    osc.stop(ctx.currentTime + delay + duration + 0.05);
+}
+
+// Nada dasar (frekuensi)
+const NOTE = {
+    C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23, G4: 392.00, A4: 440.00, B4: 493.88,
+    C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46, G5: 783.99, A5: 880.00, B5: 987.77,
+    C6: 1046.50
+};
+
+// ---- Suara Klik Tombol ----
+function playClickSound() {
+    playTone(1200, 0.05, 0.3, 'square');
+}
+
+// ---- Suara Benar: C-E-G-C naik ----
+function playCorrectSound() {
+    const notes = [NOTE.C4, NOTE.E4, NOTE.G4, NOTE.C5];
+    notes.forEach((f, i) => {
+        playTone(f, 0.5, 0.7, 'sine', i * 0.13);
+    });
+}
+
+// ---- Suara Salah: E-C turun ----
+function playWrongSound() {
+    playTone(NOTE.E4, 0.3, 0.5, 'sine', 0);
+    playTone(NOTE.C4, 0.35, 0.5, 'sine', 0.18);
+}
+
+// ---- Suara Pesan Moral: C-E-G naik perlahan ----
+function playMoralSound() {
+    const notes = [NOTE.C4, NOTE.E4, NOTE.G4];
+    notes.forEach((f, i) => {
+        playTone(f, 0.6, 0.4, 'sine', i * 0.18);
+    });
+}
+
+// ---- Backsound Dashboard: C-E-G-E-C-E-G-E (loop) ----
+let dashboardMusicInterval = null;
+let dashboardMusicPlaying = false;
+
+function startDashboardMusic() {
+    if (dashboardMusicPlaying) return;
+    dashboardMusicPlaying = true;
+
+    const melody = [
+        NOTE.C4, NOTE.E4, NOTE.G4, NOTE.E4,
+        NOTE.C4, NOTE.E4, NOTE.G4, NOTE.E4
+    ];
+
+    let index = 0;
+    const noteDuration = 0.45;
+    const totalDuration = melody.length * noteDuration;
+
+    function playLoop() {
+        if (!dashboardMusicPlaying) return;
+        const ctx = getAudioContext();
+        const startTime = ctx.currentTime;
+
+        melody.forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0, startTime + i * noteDuration);
+            gain.gain.linearRampToValueAtTime(0.15, startTime + i * noteDuration + 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + i * noteDuration + noteDuration * 0.9);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(startTime + i * noteDuration);
+            osc.stop(startTime + i * noteDuration + noteDuration);
+        });
+
+        dashboardMusicInterval = setTimeout(playLoop, totalDuration * 1000);
+    }
+
+    playLoop();
+}
+
+function stopDashboardMusic() {
+    dashboardMusicPlaying = false;
+    if (dashboardMusicInterval) {
+        clearTimeout(dashboardMusicInterval);
+        dashboardMusicInterval = null;
+    }
+}
+
+// ---- Speech Synthesis ----
+function speak(text, rate = 0.9, pitch = 1.0) {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'id-ID';
+        utterance.rate = rate;
+        utterance.pitch = pitch;
+        utterance.volume = 1.0;
+        window.speechSynthesis.speak(utterance);
+    }
+}
+
+// ---- Fanfare kemenangan ----
+function playFanfare() {
+    const notes = [NOTE.C4, NOTE.E4, NOTE.G4, NOTE.C5, NOTE.E5, NOTE.G5, NOTE.C6];
+    notes.forEach((f, i) => {
+        playTone(f, 0.35, 0.7, 'triangle', i * 0.12);
+    });
+}
+
+// ============================================================
+// DATA ADEGAN
+// ============================================================
+const scenes = [
+    {
+        title: 'Adegan 1: "Kelinci Kecil dan Wortel yang Hilang"',
+        visual: '🐰😢🥕',
+        story: 'Kelinci Kecil sedang sedih. Wortel kesukaannya hilang. Teman-temannya melihat Kelinci Kecil menangis.',
+        choices: [
+            { text: 'Menghibur Kelinci Kecil', correct: true, letter: 'A' },
+            { text: 'Tertawa dan pergi', correct: false, letter: 'B' },
+            { text: 'Diam saja', correct: false, letter: 'C' }
+        ],
+        correctResponse: 'Kamu baik sekali! Menghibur teman yang sedih membuatnya merasa dicintai. Kelinci Kecil tersenyum lagi! 😊',
+        wrongResponses: {
+            B: 'Menertawakan teman yang sedih membuatnya semakin sedih. Itu tidak baik.',
+            C: 'Diam saja membuat teman merasa tidak diperhatikan. Lebih baik menghiburnya.'
+        },
+        moral: 'Ketika teman sedih, hiburlah dengan kasih sayang.'
+    },
+    {
+        title: 'Adegan 2: "Kura-kura yang Terlambat"',
+        visual: '🐢🚪🎉',
+        story: 'Kura-kura datang terlambat ke pesta. Ia merasa malu dan takut ditertawakan.',
+        choices: [
+            { text: 'Menyambut Kura-kura dengan hangat', correct: true, letter: 'A' },
+            { text: 'Menyuruh Kura-kura pulang', correct: false, letter: 'B' },
+            { text: 'Mengabaikan Kura-kura', correct: false, letter: 'C' }
+        ],
+        correctResponse: 'Hebat! Menyambut teman dengan hangat membuatnya merasa diterima. Kura-kura senang sekali! 🐢',
+        wrongResponses: {
+            B: 'Menyuruh teman pulang membuatnya sedih dan merasa tidak diterima.',
+            C: 'Mengabaikan teman membuatnya merasa tidak dihargai. Sapa dan sambutlah!'
+        },
+        moral: 'Terimalah teman tanpa melihat kelemahannya.'
+    },
+    {
+        title: 'Adegan 3: "Kelinci Kecil Marah"',
+        visual: '🐰😠🧸',
+        story: 'Mainan Kelinci Kecil diambil tanpa izin. Ia sangat marah dan ingin membalas.',
+        choices: [
+            { text: 'Bicara baik-baik dan minta maaf', correct: true, letter: 'A' },
+            { text: 'Membalas dengan marah', correct: false, letter: 'B' },
+            { text: 'Menangis dan mengurung diri', correct: false, letter: 'C' }
+        ],
+        correctResponse: 'Pintar! Bicara baik-baik menyelesaikan masalah tanpa menyakiti siapa pun. Kelinci Kecil dan temannya berdamai! 🤝',
+        wrongResponses: {
+            B: 'Membalas dengan marah hanya membuat masalah semakin besar.',
+            C: 'Menangis dan mengurung diri tidak menyelesaikan masalah. Ayo bicara baik-baik!'
+        },
+        moral: 'Marah itu wajar, tapi selesaikan dengan cara baik.'
+    },
+    {
+        title: 'Adegan 4: "Teman Baru di Kelas"',
+        visual: '🧒📚😐',
+        story: 'Ada anak baru di kelas. Ia duduk sendiri dan terlihat takut. Tidak ada yang menyapanya.',
+        choices: [
+            { text: 'Menyapa dan mengajak bermain', correct: true, letter: 'A' },
+            { text: 'Membiarkan saja', correct: false, letter: 'B' },
+            { text: 'Menertawakan anak baru', correct: false, letter: 'C' }
+        ],
+        correctResponse: 'Luar biasa! Menyapa teman baru membuatnya merasa diterima. Sekarang mereka bermain bersama! 🎉',
+        wrongResponses: {
+            B: 'Membiarkan teman baru sendirian membuatnya merasa tidak diterima.',
+            C: 'Menertawakan teman baru sangat menyakitkan hatinya. Jangan lakukan itu!'
+        },
+        moral: 'Satu sapaan bisa mengubah hari seseorang.'
+    },
+    {
+        title: 'Adegan 5: "Berbagi Kebahagiaan"',
+        visual: '🐰🥕🥕🥕',
+        story: 'Kelinci Kecil mendapat banyak wortel. Temannya tidak mendapat apa-apa. Apa yang harus dilakukan?',
+        choices: [
+            { text: 'Berbagi wortel dengan teman', correct: true, letter: 'A' },
+            { text: 'Menyimpan semua untuk diri sendiri', correct: false, letter: 'B' },
+            { text: 'Makan di depan teman tanpa berbagi', correct: false, letter: 'C' }
+        ],
+        correctResponse: 'Kamu hebat! Berbagi membuat kebahagiaan bertambah. Semua teman makan bersama dengan gembira! 🥕🥕',
+        wrongResponses: {
+            B: 'Menyimpan semua untuk diri sendiri membuat teman sedih. Berbagi itu indah!',
+            C: 'Makan di depan teman tanpa berbagi membuatnya sedih. Ayo berbagi!'
+        },
+        moral: 'Berbagi tidak mengurangi kebahagiaan, justru menambahnya.'
+    }
+];
+
+// ============================================================
+// GAME STATE
+// ============================================================
+let currentScene = 0;
+let score = 0;
+let answeredCorrectly = [false, false, false, false, false];
+let sceneAnswered = [false, false, false, false, false];
+let currentAnswerCorrect = false;
+
+// ============================================================
+// DOM ELEMENTS
+// ============================================================
+const dashboard = document.getElementById('dashboard');
+const gameScreen = document.getElementById('gameScreen');
+const endScreen = document.getElementById('endScreen');
+const btnStart = document.getElementById('btnStart');
+const progressBar = document.getElementById('progressBar');
+const sceneCounter = document.getElementById('sceneCounter');
+const sceneTitle = document.getElementById('sceneTitle');
+const sceneVisual = document.getElementById('sceneVisual');
+const storyBox = document.getElementById('storyBox');
+const choicesContainer = document.getElementById('choicesContainer');
+const feedbackBox = document.getElementById('feedbackBox');
+const feedbackTitle = document.getElementById('feedbackTitle');
+const feedbackText = document.getElementById('feedbackText');
+const moralBox = document.getElementById('moralBox');
+const moralText = document.getElementById('moralText');
+const btnPrev = document.getElementById('btnPrev');
+const btnRetry = document.getElementById('btnRetry');
+const btnNext = document.getElementById('btnNext');
+const endScore = document.getElementById('endScore');
+const endMotivation = document.getElementById('endMotivation');
+const btnRestart = document.getElementById('btnRestart');
+const btnHome = document.getElementById('btnHome');
+
+// ============================================================
+// FUNGSI GAME
+// ============================================================
+
+function showScreen(screen) {
+    dashboard.style.display = 'none';
+    gameScreen.style.display = 'none';
+    endScreen.style.display = 'none';
+    screen.style.display = 'flex';
+}
+
+function updateProgressBar() {
+    progressBar.innerHTML = '';
+    for (let i = 0; i < 5; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'progress-dot';
+        if (i === currentScene) dot.classList.add('active');
+        if (answeredCorrectly[i]) dot.classList.add('done');
+        dot.textContent = i + 1;
+        progressBar.appendChild(dot);
+    }
+}
+
+function renderScene() {
+    const scene = scenes[currentScene];
+    sceneCounter.textContent = `Adegan ${currentScene + 1} dari 5`;
+    sceneTitle.textContent = scene.title;
+    sceneVisual.textContent = scene.visual;
+    storyBox.textContent = scene.story;
+
+    updateProgressBar();
+
+    // Reset feedback
+    feedbackBox.className = 'feedback-box';
+    feedbackBox.classList.remove('show');
+    moralBox.classList.remove('show');
+
+    // Render choices
+    choicesContainer.innerHTML = '';
+    scene.choices.forEach((choice, index) => {
+        const btn = document.createElement('button');
+        btn.className = `choice-btn choice-${choice.letter.toLowerCase()}`;
+        btn.innerHTML = `<span class="choice-letter">${choice.letter}</span><span>${choice.text}</span>`;
+        btn.dataset.index = index;
+        btn.addEventListener('click', () => handleChoice(index));
+        choicesContainer.appendChild(btn);
+    });
+
+    // Reset navigation
+    btnPrev.classList.remove('show');
+    btnRetry.classList.remove('show');
+    btnNext.classList.remove('show');
+
+    // Jika sudah dijawab, tampilkan state
+    if (sceneAnswered[currentScene]) {
+        restoreAnsweredState();
+    }
+}
+
+function restoreAnsweredState() {
+    const scene = scenes[currentScene];
+    const btns = choicesContainer.querySelectorAll('.choice-btn');
+    
+    // Tentukan jawaban yang dipilih (simpan di state jika perlu, atau cek dari answeredCorrectly)
+    // Kita cari jawaban benar untuk highlight
+    let selectedCorrect = answeredCorrectly[currentScene];
+    
+    btns.forEach((btn, idx) => {
+        btn.classList.add('disabled');
+        if (scene.choices[idx].correct) {
+            btn.classList.add('correct');
+        } else if (!selectedCorrect) {
+            // Jika salah, highlight yang salah juga
+            // Tapi kita tidak tahu mana yang dipilih, jadi highlight semua yang salah? Tidak.
+            // Kita bisa simpan pilihan terakhir. Untuk sederhana, kita highlight yang benar saja jika benar,
+            // dan semua yang salah diberi tanda jika jawaban salah.
+        }
+    });
+
+    // Tampilkan feedback yang sesuai
+    if (selectedCorrect) {
+        feedbackBox.className = 'feedback-box correct-fb show';
+        feedbackTitle.className = 'feedback-title correct-ft';
+        feedbackTitle.textContent = '🎉 SELAMAT! PILIHAN YANG TEPAT! 🎉';
+        feedbackText.textContent = scene.correctResponse;
+        moralBox.classList.add('show');
+        moralText.textContent = scene.moral;
+    } else {
+        feedbackBox.className = 'feedback-box wrong-fb show';
+        feedbackTitle.className = 'feedback-title wrong-ft';
+        feedbackTitle.textContent = '🤔 Coba pikirkan lagi ya!';
+        // Cari penjelasan untuk pilihan yang salah (kita tidak tahu mana yang dipilih, tampilkan semua)
+        let wrongText = '';
+        for (let key in scene.wrongResponses) {
+            wrongText += scene.wrongResponses[key] + ' ';
+        }
+        feedbackText.textContent = wrongText.trim();
+    }
+
+    // Tampilkan navigasi
+    btnRetry.classList.add('show');
+    if (currentScene > 0) btnPrev.classList.add('show');
+    btnNext.classList.add('show');
+    if (currentScene === 4) {
+        btnNext.textContent = '🏁 SELESAI';
+    } else {
+        btnNext.textContent = '⏭️ LANJUT';
+    }
+}
+
+function handleChoice(index) {
+    // Cek jika sudah dijawab
+    if (sceneAnswered[currentScene]) return;
+
+    playClickSound();
+
+    const scene = scenes[currentScene];
+    const isCorrect = scene.choices[index].correct;
+    currentAnswerCorrect = isCorrect;
+
+    sceneAnswered[currentScene] = true;
+    if (isCorrect) {
+        score++;
+        answeredCorrectly[currentScene] = true;
+    }
+
+    // Disable semua tombol
+    const btns = choicesContainer.querySelectorAll('.choice-btn');
+    btns.forEach((btn, idx) => {
+        btn.classList.add('disabled');
+        if (scene.choices[idx].correct) {
+            btn.classList.add('correct');
+        } else if (idx === index && !isCorrect) {
+            btn.classList.add('wrong');
+        }
+    });
+
+    // Update progress
+    updateProgressBar();
+
+    // Feedback
+    if (isCorrect) {
+        playCorrectSound();
+        speak('Selamat! Kamu baik sekali!', 0.9, 1.2);
+
+        feedbackBox.className = 'feedback-box correct-fb show';
+        feedbackTitle.className = 'feedback-title correct-ft';
+        feedbackTitle.textContent = '🎉 SELAMAT! PILIHAN YANG TEPAT! 🎉';
+        feedbackText.textContent = scene.correctResponse;
+
+        // Tampilkan pesan moral setelah delay
+        setTimeout(() => {
+            playMoralSound();
+            moralBox.classList.add('show');
+            moralText.textContent = scene.moral;
+            speak(scene.moral, 0.85, 1.1);
+        }, 900);
+    } else {
+        playWrongSound();
+        speak('Coba pikirkan lagi ya!', 0.9, 1.0);
+
+        feedbackBox.className = 'feedback-box wrong-fb show';
+        feedbackTitle.className = 'feedback-title wrong-ft';
+        feedbackTitle.textContent = '🤔 Coba pikirkan lagi ya!';
+        feedbackText.textContent = scene.wrongResponses[scene.choices[index].letter] || 'Pilihan itu kurang tepat. Ayo coba lagi!';
+
+        // Jangan tampilkan moral jika salah
+    }
+
+    // Tampilkan navigasi
+    btnRetry.classList.add('show');
+    if (currentScene > 0) btnPrev.classList.add('show');
+    btnNext.classList.add('show');
+    if (currentScene === 4) {
+        btnNext.textContent = '🏁 SELESAI';
+    } else {
+        btnNext.textContent = '⏭️ LANJUT';
+    }
+}
+
+// ============================================================
+// NAVIGASI
+// ============================================================
+
+btnNext.addEventListener('click', () => {
+    playClickSound();
+    if (currentScene < 4) {
+        currentScene++;
+        renderScene();
+    } else {
+        showEndScreen();
+    }
+});
+
+btnPrev.addEventListener('click', () => {
+    playClickSound();
+    if (currentScene > 0) {
+        currentScene--;
+        renderScene();
+    }
+});
+
+btnRetry.addEventListener('click', () => {
+    playClickSound();
+    // Reset jawaban untuk scene ini
+    if (sceneAnswered[currentScene]) {
+        if (answeredCorrectly[currentScene]) {
+            score--;
+            answeredCorrectly[currentScene] = false;
+        }
+        sceneAnswered[currentScene] = false;
+    }
+    renderScene();
+});
+
+// ============================================================
+// END SCREEN
+// ============================================================
+
+function showEndScreen() {
+    gameScreen.style.display = 'none';
+    endScreen.style.display = 'flex';
+
+    const scoreText = `Kamu menjawab benar ${score} dari 5`;
+    endScore.textContent = scoreText;
+
+    let motivation = '';
+    let speakText = '';
+    let speakPitch = 1.0;
+
+    if (score === 5) {
+        motivation = '🏆 LUAR BIASA! Kamu Juara! 🏆';
+        speakText = 'Luar biasa! Kamu juara!';
+        playFanfare();
+        speakPitch = 1.3;
+    } else if (score === 4) {
+        motivation = '⭐ HEBAT! Kamu Pintar! ⭐';
+        speakText = 'Hebat! Kamu pintar!';
+        const notes = [NOTE.C4, NOTE.E4, NOTE.G4, NOTE.C5];
+        notes.forEach((f, i) => playTone(f, 0.4, 0.6, 'triangle', i * 0.15));
+        speakPitch = 1.2;
+    } else if (score === 3) {
+        motivation = '👍 BAGUS! Ayo Coba Lagi! 👍';
+        speakText = 'Bagus! Ayo coba lagi!';
+        const notes = [NOTE.C4, NOTE.E4, NOTE.G4];
+        notes.forEach((f, i) => playTone(f, 0.4, 0.5, 'sine', i * 0.18));
+        speakPitch = 1.1;
+    } else {
+        motivation = '💪 SEMANGAT! Kamu Bisa! 💪';
+        speakText = 'Semangat! Kamu bisa!';
+        const notes = [NOTE.C4, NOTE.C4, NOTE.G4, NOTE.G4];
+        notes.forEach((f, i) => playTone(f, 0.4, 0.5, 'sine', i * 0.2));
+        speakPitch = 1.0;
+    }
+
+    endMotivation.textContent = motivation;
+
+    // Ucapkan setelah suara selesai
+    setTimeout(() => {
+        speak(speakText, 0.9, speakPitch);
+    }, 800);
+}
+
+// ============================================================
+// RESTART & HOME
+// ============================================================
+
+btnRestart.addEventListener('click', () => {
+    playClickSound();
+    resetGame();
+    showScreen(gameScreen);
+    renderScene();
+});
+
+btnHome.addEventListener('click', () => {
+    playClickSound();
+    resetGame();
+    showScreen(dashboard);
+    startDashboardMusic();
+});
+
+function resetGame() {
+    currentScene = 0;
+    score = 0;
+    answeredCorrectly = [false, false, false, false, false];
+    sceneAnswered = [false, false, false, false, false];
+    currentAnswerCorrect = false;
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+}
+
+// ============================================================
+// START GAME
+// ============================================================
+
+btnStart.addEventListener('click', () => {
+    playClickSound();
+    stopDashboardMusic();
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+    // Resume audio context on user gesture
+    getAudioContext();
+
+    resetGame();
+    showScreen(gameScreen);
+    renderScene();
+});
+
+// ============================================================
+// INIT
+// ============================================================
+
+// Mulai backsound saat dashboard pertama kali ditampilkan
+// Harus menunggu interaksi user untuk audio context
+document.addEventListener('click', function initAudio() {
+    getAudioContext();
+    document.removeEventListener('click', initAudio);
+}, { once: true });
+
+// Mulai backsound setelah interaksi pertama
+document.addEventListener('click', function startMusicOnce() {
+    if (dashboard.style.display !== 'none') {
+        startDashboardMusic();
+    }
+    document.removeEventListener('click', startMusicOnce);
+}, { once: true });
+
+// Tampilkan dashboard saat load
+showScreen(dashboard);
+
+// Cegah scroll berlebih
+document.body.addEventListener('touchmove', (e) => {
+    if (e.target.closest('#gameScreen') || e.target.closest('#endScreen')) {
+        // Izinkan scroll di dalam game screen
+        return;
+    }
+    e.preventDefault();
+}, { passive: false });
+
+</script>
+</body>
+</html>
